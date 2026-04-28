@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Obsidian (falls jemand das Repo später mal als Vault öffnet)
+.obsidian/
+
+# Privater Arbeitsbereich (lokal, nicht versioniert)
+private/
+*.private.md
