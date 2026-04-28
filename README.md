@@ -22,8 +22,9 @@ it is discussed verbally or kept in a private local file (gitignored), never com
 - `Cadenza_Projektstruktur.md` — Code structure reference (DE)
 - `MyCadenza_Funktionsuebersicht.md` — Feature overview (DE)
 - `MyCadenza_CodeReview_v1_7_0.md` — Living code review document (DE)
-- `MyCadenza_TodoList_v1_7.md` — Roadmap and stage planning (DE)
-- `Cadenza_ElevenLabs_Prompts.md` — Sound generation prompts (DE/EN)
+* `MyCadenza_TodoList_v1_7.md` — Roadmap and stage planning (DE)
+* `MyCadenza_FeatureKonzepte_v1_7_x.md` — Feature concepts for v1.7.x: default categories and onboarding template (DE)
+* `Cadenza_ElevenLabs_Prompts.md` — Sound generation prompts (DE/EN)
 - `ChrisMeinTag_Veroeffentlichung_Checkliste.md` — App Store release checklist (DE)
 
 ## Language
