@@ -3,7 +3,7 @@
 Konzept-Dokument für zwei eng verzahnte Erst-Anwender-Features:
 **Default-Kategorien** und **Mustertemplate „MyCadenza einrichten"**.
 
-Entwurfsstand: 28.04.2026
+Stand: 28.04.2026 (Iteration 2)
 
 ---
 
@@ -51,12 +51,12 @@ Kategorien an. Diese Kategorien:
 
 ### 2.2 Die vier Kategorien
 
-| Kategorie | Klangwelt | Farbe (vorläufig) | Icon (vorläufig) |
-|---|---|---|---|
-| Haushalt | Morgenwald | Grün | (offen) |
-| Arbeit | Cityflow | Blau | (offen) |
-| Family & Friends | Salon | Pink / Korall | (offen) |
-| Gesundheit | Horizont | Petrol | (offen) |
+| Deutsch | Englisch | Klangwelt | Farbe (vorläufig) | Icon (vorläufig) |
+|---|---|---|---|---|
+| Haushalt | Home | Morgenwald | Grün | (offen) |
+| Arbeit | Work | Cityflow | Blau | (offen) |
+| Family & Friends | Family & Friends | Salon | Pink / Korall | (offen) |
+| Gesundheit | Health | Horizont | Petrol | (offen) |
 
 **Klangwelt-Zuordnung — Begründung:**
 
@@ -70,6 +70,16 @@ Kategorien an. Diese Kategorien:
   Soziale klanglich mit.
 - *Gesundheit → Horizont* — weit, atmend, regenerativ. Verweist auf das
   Längerfristige, Selbstfürsorge.
+
+**Englische Kategorienamen — Begründung:**
+
+- *Haushalt → Home* — kurz, warm, unprätentiös. Trifft den Wohnen-und-Alltag-
+  Charakter besser als das formalere „Household" oder das US-politisch
+  konnotierte „Domestic".
+- *Family & Friends* bleibt unverändert, ist im Deutschen ohnehin schon
+  englisch.
+- *Arbeit → Work* und *Gesundheit → Health* sind direkte und unkomplizierte
+  Übersetzungen.
 
 **Farbe und Icon** sind als vorläufig markiert. Sie werden in einer eigenen
 Designsession finalisiert, idealerweise zusammen mit einem Test der vier
@@ -142,12 +152,14 @@ Erkennung „Erstinstallation" über AppStorage-Flag plus zusätzlich Sync-Statu
 - Finale Farben (vorläufige Tönung muss verifiziert werden, besonders im
   Kontrast zur bestehenden 45-Farben-Palette)
 - Icon-Auswahl je Kategorie aus dem bestehenden Icon-Set
-- Englische Übersetzungen der Kategorienamen
-  (Haushalt → Household? Home? — Wahl mit Bedacht treffen)
 - UX-Detail: Erlauben wir dem Nutzer, einzelne Defaults im Onboarding
   abzuwählen? Oder werden alle vier angelegt und der Nutzer löscht
   unerwünschte später selbst? — Tendenz: alle vier anlegen, weil
   Abwahl-UI das Onboarding verkompliziert.
+
+### 2.7 Geklärte Punkte (in Iteration 2)
+
+- ✓ Englische Kategorienamen festgelegt: Home / Work / Family & Friends / Health
 
 ---
 
@@ -175,22 +187,45 @@ Verhalten der App — und kennt das Muster bereits, wenn er später selbst
 
 ### 3.2 Inhaltsstruktur des Templates
 
-Hauptaufgabe: **„MyCadenza einrichten"**
+**Wichtig zur Datenstruktur:** Hauptaufgaben und Teilaufgaben in MyCadenza
+haben jeweils *genau ein* Textfeld. Es gibt keine separate Beschreibung,
+keine Notizen, keinen Untertitel. Ein einziger Text trägt alles, was die
+Aufgabe ausmacht — kurz oder lang, je nach Bedarf des Nutzers. Die Texte
+des Mustertemplates sind entsprechend formuliert: handlungsorientiert,
+mit knappem Kontext wo nötig.
 
-Teilaufgaben (Lern-Container, Reihenfolge bewusst gewählt):
+**Hauptaufgabe:** „MyCadenza einrichten" (nur dieser Titel, kein weiterer
+Text)
 
-1. *Eine eigene Kategorie anlegen oder anpassen* — der Nutzer macht die
-   Defaults zu seinen.
-2. *Klangwelten der Kategorien einmal durchhören* — Verständnis für die
-   akustische Identität.
-3. *Eine erste eigene Aufgabe erstellen* — der zentrale Workflow.
-4. *Eine Aufgabe erledigen — auf den Sound achten* — die Klangwelt-Belohnung
-   bewusst erleben.
-5. *Eine wiederkehrende Aufgabe einrichten* — fortgeschrittenes Feature
-   einführen.
-6. *Tag-Beginn-Sound einstellen* — die rituellen Akzente der App entdecken.
+**Teilaufgaben (Lern-Container, Reihenfolge bewusst gewählt):**
 
-Jede Teilaufgabe hat einen kurzen, freundlich formulierten Beschreibungstext.
+1. *Kategorien zu deinen machen* — Defaults anpassen oder eigene anlegen
+2. *Klangwelten durchhören* — akustische Identität der Kategorien erleben
+3. *Erste eigene Aufgabe anlegen* — der zentrale Workflow
+4. *Aufgabe erledigen — auf den Sound achten* — die Klangwelt-Belohnung
+   bewusst erleben
+5. *Verfallende Aufgabe mit Teilaufgaben einrichten* — zwei zentrale
+   App-Konzepte gemeinsam einführen
+6. *Tag-Beginn-Sound wählen* — die rituellen Akzente entdecken
+7. *Tagesfortschritt am Ring und im Tagesbericht verfolgen* — sichtbar
+   machen, wo das Tun seine Resonanz findet
+
+**Hinweis zur Reihenfolge — warum „verfallende Aufgabe" statt
+„wiederkehrende Aufgabe":**
+
+Wiederholung ist beim Anlegen einer Aufgabe der Default. Der Nutzer lernt
+das Konzept beim normalen Gebrauch ohnehin automatisch. Verfall hingegen
+ist eine bewusste Einstellung, die viele übersehen würden — gerade darum
+gehört er ins Onboarding. Die Kombination mit Teilaufgaben in einem Schritt
+ist absichtlich anspruchsvoll: in der Mitte einer Lernreihe ist der Nutzer
+am aufmerksamsten und kann zwei Konzepte gemeinsam aufnehmen.
+
+**Hinweis zum Schluss — warum „Tagesfortschritt verfolgen" als 7. Punkt:**
+
+Nach all dem Anlegen und Erledigen wird sichtbar gemacht, wo der Nutzer das
+Ergebnis seines Tuns sieht. Eine schließende Klammer der Lernreihe — und ein
+sanfter Hinweis auf die Komponenten Fortschrittsring und Tagesbericht, die
+sonst leicht übersehen werden.
 
 **Kategoriezuordnung:** Haushalt → Klangwelt Morgenwald. Damit erlebt der
 Nutzer beim Erledigen der ersten Teilaufgabe den ruhigsten und einladendsten
@@ -198,6 +233,9 @@ der Klänge.
 
 **Verfall:** `doesNotExpire = true`. Das Template ist kein Tagesgeschäft,
 sondern ein Lern-Container in eigenem Tempo.
+
+Die finalen Texte der sieben Teilaufgaben (deutsch und englisch) sind in
+**Anhang A** aufgeführt.
 
 ### 3.3 Marker `isSampleData` — nur am Template, nicht an der Aufgabe
 
@@ -207,7 +245,7 @@ Der Marker dient ausschließlich der Update-Logik:
   beim Update prüfen: Ist das vorhandene Template noch
   `isSampleData = true` *und* unverändert vom Nutzer? → Dann durch neue
   Version ersetzen.
-- Hat der Nutzer das Template angepasst (Beschreibung geändert, Teilaufgaben
+- Hat der Nutzer das Template angepasst (Text geändert, Teilaufgaben
   hinzugefügt, andere Kategorie zugewiesen)? → `isSampleData` wird auf
   `false` gesetzt oder das Original-Hash-Feld stimmt nicht mehr überein →
   *nicht* überschreiben. Der Nutzer hat es zu seinem gemacht.
@@ -286,11 +324,17 @@ Der Pflegeaufwand bleibt überschaubar, weil:
 ### 3.7 Offene Punkte
 
 - Konkretes Icon für den Onboarding-Hinweis
-- Texte der sechs Teilaufgaben
 - Verhalten beim Update: Soll eine bereits generierte Sample-Aufgabe
   beim App-Update *auch* aktualisiert werden, oder bleibt nur die
   Template-Aktualisierung wirksam und neu generierte Aufgaben (z.B. durch
   manuelles „aus Template Aufgabe machen") nutzen den neuen Stand?
+
+### 3.8 Geklärte Punkte (in Iteration 2)
+
+- ✓ Datenstruktur klargestellt: nur ein Textfeld pro Aufgabe/Teilaufgabe
+- ✓ Sieben Teilaufgaben (statt sechs), neue Schritt-5-Kombination,
+  neuer Schluss-Schritt 7
+- ✓ Texte der sieben Teilaufgaben formuliert (siehe Anhang A)
 
 ---
 
@@ -308,7 +352,7 @@ Nach dem Onboarding sieht der Nutzer:
 - in der Kategorienliste: vier farbige Kategorien mit Klangwelten
 - in der Templates-Liste: ein Mustertemplate „MyCadenza einrichten"
 - in der Heute-Ansicht: eine konkrete Aufgabe „MyCadenza einrichten" mit
-  sechs Teilaufgaben, dezent als Onboarding-Begleiter markiert
+  sieben Teilaufgaben, dezent als Onboarding-Begleiter markiert
 
 Die App wirkt damit ab Sekunde eins bewohnt — und zeigt ihre Designsprache
 in Aktion, nicht nur in Erklärtexten.
@@ -343,6 +387,39 @@ Datenmodell steht.
 
 ---
 
+## Anhang A — Texte der sieben Teilaufgaben
+
+Die Teilaufgaben des Mustertemplates „MyCadenza einrichten". Ein einziger
+Text pro Teilaufgabe, gemischt aus kurzen handlungsorientierten und etwas
+ausführlicheren Formulierungen. Tonfall: warm-einladend, du-Ansprache.
+
+| # | Deutsch | Englisch |
+|---|---|---|
+| 1 | Kategorien zu deinen machen — Farben, Symbole oder Klangwelten anpassen | Make the categories your own — adjust colours, icons, or sound worlds |
+| 2 | Klangwelten der Kategorien einmal durchhören | Listen to each category's sound world |
+| 3 | Erste eigene Aufgabe anlegen | Create your first task |
+| 4 | Aufgabe erledigen — auf den Sound achten | Complete a task — and listen to the sound |
+| 5 | Verfallende Aufgabe mit Teilaufgaben einrichten — Verfall im Editor festlegen | Set up an expiring task with subtasks — expiry is set in the editor |
+| 6 | Tag-Beginn-Sound in den Einstellungen wählen | Pick your day-start sound in Settings |
+| 7 | Tagesfortschritt am Ring und im Tagesbericht verfolgen | Track your day's progress on the ring and in the daily report |
+
+**Hinweis zur Lokalisierung der Klangwelt-Namen:** Die Klangwelten
+(Morgenwald, Cityflow, Salon, Horizont) werden in den Texten nicht
+namentlich genannt — sie kommen über die Kategoriezuordnung implizit ins
+Spiel. Das vermeidet die Frage, ob „Morgenwald" auch im Englischen
+„Morgenwald" bleibt oder zu „Morning Forest" wird. Diese Lokalisierungs-
+Entscheidung kann später separat getroffen werden, ohne diese Texte zu
+berühren.
+
+---
+
 ## Änderungsprotokoll
 
-- **2026-04-28** — Erstentwurf, basierend auf Konzeptdiskussion vom 27. und 28.04.2026
+- **2026-04-28 (Iteration 1)** — Erstentwurf, basierend auf Konzept-
+  diskussion vom 27. und 28.04.2026
+- **2026-04-28 (Iteration 2)** — Datenmodell-Korrektur (genau ein Textfeld
+  pro Aufgabe/Teilaufgabe), sieben Teilaufgaben statt sechs, neue
+  Schritt-5-Kombination (verfallende Aufgabe mit Teilaufgaben), neuer
+  Schluss-Schritt 7 (Tagesfortschritt), englische Kategorienamen
+  festgelegt (Home/Work/Family & Friends/Health), Anhang A mit den
+  finalen Texten ergänzt
