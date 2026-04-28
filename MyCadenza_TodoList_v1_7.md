@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 25.04.2026 · Build 10716 gepusht und getaggt
+> Stand: 28.04.2026 · Build 10716 gepusht und getaggt · Onboarding-Verfeinerungs-Konzept dokumentiert
 
 ---
 
@@ -141,6 +141,30 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 - [ ] **System-Klangwelt vollständig mit eigenen WAVs** — Erkenntnis aus 10716-Test: System-Töne fallen bei kurzen Aktionen (`playSubTaskDone` etc.) kaum hörbar aus. Soll Teil des KlangweltReview werden.
 - [ ] **Hauptaufgaben-Design** – Abstimmung Website-Darstellung mit App-Design
 
+### Onboarding-Verfeinerung (v1.7.x)
+
+Konzept-Dokument: `MyCadenza_FeatureKonzepte_v1_7_x.md`
+
+Zwei eng verzahnte Features für Neuanwender, die nach B-M2 (Build 10721) auf der dort entwickelten Sync-Erkennungs-Logik aufsetzen:
+
+* **Default-Kategorien** — Vier Kategorien (Haushalt, Arbeit, Family & Friends, Gesundheit) werden beim Erst-Start auf leerer DB angelegt, jede mit eigener Klangwelt, Farbe und Icon. Sync-aware (CloudKit-Initial-Sync abwarten). Bestandsschutz für Nutzer von v1.6.1 oder früher.
+* **Mustertemplate „MyCadenza einrichten"** — Lern-Container mit sechs Teilaufgaben, kategorisiert als „Haushalt" (Klangwelt Morgenwald), `doesNotExpire = true`, mit `isSampleData`-Marker für saubere Update-Logik. Beim Onboarding-Ende wird zusätzlich automatisch eine konkrete Aufgabe aus diesem Template generiert (Startzeit „jetzt", ohne Verfall, ohne Marker — normale User-Aufgabe). Visuell dezent als Onboarding-Begleiter markiert.
+
+**Build-Skizze (nach Abschluss von 10724):**
+
+* Sync-aware Erst-Start-Erkennung als wiederverwendbares Modul extrahieren
+* Default-Kategorien anlegen (Datenmodell + Seed-Logik)
+* Mustertemplate anlegen (Datenmodell + Inhalts-Definition)
+* Onboarding-Anpassung — Screen 4 adaptiv (drei Varianten je nach Sync-Status), Sample-Aufgabe-Generation
+* Visueller Onboarding-Hinweis (UI-Heuristik)
+
+**Offene Designentscheidungen** (siehe Konzept-Dokument für Details):
+
+* Konkrete Farbtöne und Icons der vier Kategorien
+* Englische Übersetzungen der Kategorienamen
+* Konkretes Onboarding-Begleiter-Icon
+* Texte der sechs Teilaufgaben
+* UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend)
@@ -253,3 +277,4 @@ Simulator → echtes iPhone (Developer-Build) → TestFlight. Sauberer Verifikat
 - `Cadenza_Projektstruktur.md` – Projektstruktur & Bekannte Fallstricke
 - `MyCadenza_Funktionsuebersicht.md` – App-Funktionsweise
 - `MyCadenza_Zielarchitektur.md` – Strategischer Bezugsrahmen
+- MyCadenza_FeatureKonzepte_v1_7_x.md` – Detailkonzepte für Onboarding-Verfeinerung (Default-Kategorien, Mustertemplate)
