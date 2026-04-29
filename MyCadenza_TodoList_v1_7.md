@@ -128,15 +128,33 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 
 ### Methodische TODOs vor Diagnose-Etappen
 
-- [ ] **Begriffs-Glossar für UI-Hierarchie erstellen** (vor Build 10718)
-  Vor der nächsten View-spezifischen Diagnose-Etappe einigen wir uns auf eindeutige Bezeichnungen:
-  - **Heute-Tab** vs. **Aufgaben-Tab** vs. **Historie-Tab** vs. **Einstellungen-Tab** (die 4 Bottom-Tabs)
-  - **Heute-Liste** = die Liste in der Heute-Ansicht
-  - **Aufgaben-Liste** = die Liste im Aufgaben-Tab (Editor)
-  - **Inline-Expand-Bereich** = die ausklappbare Subtask-Anzeige in der Heute-Liste-Zeile
-  - **SubTask-Sheet** = das modale Sheet, das beim Tap auf eine Aufgabe in der Heute-Liste erscheint
-  - **Edit-Sheet** = das modale Sheet zum Bearbeiten einer Aufgabe
-  - **SubTaskEditor-Sheet** = das Sheet zum Bearbeiten einer einzelnen Subtask
+- [x] **Begriffs-Glossar für UI-Hierarchie erstellen** — erledigt 29.04.2026 (vor Build 10718). Verbindlich abgestimmt zwischen Chris und Claude.
+
+### Begriffs-Glossar (UI-Hierarchie)
+
+Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
+
+**Tabs (Bottom-Navigation):**
+- **Heute-Tab**, **Aufgaben-Tab**, **Historie-Tab**, **Einstellungen-Tab**
+
+**Listen (jeweils im zugehörigen Tab):**
+- **Heute-Liste** — die Liste in der Heute-Ansicht
+- **Aufgaben-Liste** — die Liste im Aufgaben-Tab
+- **Historie-Liste** — die Liste im Historie-Tab
+
+**Modale Sheets:**
+- **Teilaufgaben-Sheet** — das Sheet, das beim Tap auf eine Aufgabe in der Heute-Liste erscheint, wenn die Aufgabe Teilaufgaben hat (View: `SubTaskSheetView`)
+- **Edit-Sheet** — das Sheet zum Bearbeiten einer Aufgabe (View: `EditTaskView`), erreichbar via Tap auf eine Aufgabe in der Aufgaben-Liste oder via Zahnrad-Icon im Teilaufgaben-Sheet
+- **SubTaskEditor-Sheet** — das Sheet zum Bearbeiten einer einzelnen Teilaufgabe (Multi-Line-fähiger Texteditor)
+
+**UI-Elemente in Listen-Zeilen:**
+- **Inline-Expand-Bereich** — die ausklappbare Teilaufgaben-Anzeige unterhalb einer Aufgabenzeile in der Heute-Liste
+- **Status-Auswahl** — das aufklappbare Element rechts an jeder Aufgabe (technisch ein `Menu`) mit den drei Status-Optionen Offen / Erledigt / Übersprungen, plus optional Cleanup/Reset-Aktionen für `doesNotExpire`-Aufgaben
+- **Cleanup-/Reset-Menu** — der Block mit "Erledigte entfernen" und "Alle zurücksetzen". Erscheint zwei mal: (a) als Sektion innerhalb der Status-Auswahl in der Heute-Liste, (b) als eigenes Menu in der Toolbar des Teilaufgaben-Sheets (Pinsel-Icon links)
+
+**Pfade (zur Charakterisierung von Diagnose-Szenarien):**
+- **Heute-Pfad** — Aktion ausgelöst aus der Heute-Liste oder dem Teilaufgaben-Sheet
+- **Edit-Sheet-Pfad** — Aktion ausgelöst aus dem Edit-Sheet (über Aufgaben-Tab → Aufgabe antippen → Cleanup im Menu)
 
 ### Reviews & Design
 
