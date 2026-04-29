@@ -122,6 +122,11 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 - [ ] **F11 · `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView**
   Beim Cleanup/Reset über den Editor-Pfad scheint der Sound nicht zu kommen, im Gegensatz zu den anderen zwei Pfaden, die dieselbe Extension nutzen. Da Chris den EditorView-Pfad im Alltag selten nutzt, ist die Reproduzierbarkeit unsicher. Konsistenz ist das Ziel, nicht akute Bug-Behebung. **Diagnose-Etappe in Build 10718** mit präzisem Schritt-für-Schritt-Verfahren und vorher abgestimmter Terminologie.
 
+- [ ] **F12 · `syncStatus()` lockt fälschlicherweise**
+  Beim 10717-Test entdeckt: Wenn alle Teilaufgaben einer Hauptaufgabe auf `done` (oder `skipped`) gesetzt werden, propagiert `syncStatus()` den abgeleiteten Status korrekt auf die Hauptaufgabe — setzt aber zusätzlich `isManualStatus = true`. Folge: Wenn der Nutzer anschließend die Teilaufgaben wieder auf `open` setzt, ignoriert `syncStatus()` die Änderung, weil die Hauptaufgabe gelockt ist. Die Hauptaufgabe bleibt auf `done` hängen.
+  **Korrekt wäre:** `syncStatus()` darf das Lock-Flag NIE setzen — Locking ist ausschließlich Sache der `mark*(manually:)`-Methoden und `applyExpiry()`. Fix vermutlich einzeilig in `Models.swift`, aber Test-Aufwand: alle Status-Wechsel-Pfade neu durchspielen (Teilaufgaben → Hauptaufgabe und zurück, mit/ohne Lock).
+  Kandidat für 10718 oder eigene Etappe; thematisch verwandt mit B1 (Historie als Protokoll) und F4 (markOpen lässt Folge-Instanz bestehen) — Plan-vs-Realität-Block.
+
 ### Methodische TODOs vor Diagnose-Etappen
 
 - [ ] **Begriffs-Glossar für UI-Hierarchie erstellen** (vor Build 10718)
@@ -238,7 +243,8 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 - System-Klangwelt-WAVs vorbereiten
 
 **Nach v1.7.0-Release:**
-- v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9 — Plan-vs-Realität-Block
+- v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9, F12 — Plan-vs-Realität-Block
+- F12 (`syncStatus()` lockt fälschlicherweise) während 10717-Test entdeckt — Fix vermutlich einzeilig, aber Test-Aufwand spürbar; Kandidat für 10718 oder eigene Etappe
 - TemplatePaletteReview, KlangweltReview, Hauptaufgaben-Design
 - Strict Concurrency auf "Complete" als eigene Etappe
 
