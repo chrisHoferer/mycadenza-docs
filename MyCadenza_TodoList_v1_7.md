@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 28.04.2026 · Build 10716 gepusht und getaggt · Onboarding-Verfeinerungs-Konzept dokumentiert
+> Stand: 29.04.2026 · Build 10717 gepusht und getaggt · F12 entdeckt
 
 ---
 
@@ -41,7 +41,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] **CloudKit-Schema-Check (Production)** — am 25.04.2026 durchgeführt. Production- vs. Development-Schema sind deckungsgleich (alle 6 Record-Types, alle Feldnamen identisch). Damit Schema-Mismatch als Crash-Ursache ausgeschlossen.
 - [x] **Build 10715** — TaskScheduler `@MainActor`-Refactor (B-S1) + TestFlight-BG-Task-Crash-Fix. Variante B aus der Refactor-Diskussion: `@MainActor` auf gesamte Klasse, BG-Closure hopt mit `Task { @MainActor in ... }`, `DispatchWorkItem` → `Task` migriert. Build grün ohne CadenzaApp-Anpassung. Drei-Stufen-Test (Simulator → echtes iPhone → TestFlight) erfolgreich. TestFlight-Verifikation läuft passiv 24h.
 - [x] **Build 10716** — SubTask-Operations konsolidieren (C-S37). Neue Datei `MainTask+SubTaskOperations.swift` mit `@MainActor`-Extension, drei vorher in `EditTaskView`/`TodayTaskRowView`/`SubTaskSheetView` duplizierte Methoden zusammengeführt. Drei Sub-Bugfixes als Beifang: (1) `isManualStatus = false` vor `syncStatus()` jetzt überall konsistent, (2) `playCompletedRemoved`-Sound im SubTaskSheetView jetzt vorhanden (vorher fehlte er komplett), (3) `playTaskReset`-Sound im SubTaskSheetView jetzt vorhanden. Cleanup-Unlock-Ausreißer aus 10711 mitgelöst.
-- [ ] **Build 10717** — C-S38 + C-S39 (SubTask-Toggle-UI als gemeinsame Komponente, Menu-Button-Blocks formal abschließen). Beifang: F10 (`EditTaskView` hat eigene Subtask-Toggle-Implementierung ohne Sound — wird automatisch gefixt, wenn `EditTaskView` auf `InlineSubTaskRow` umgebaut wird). Mittlere Etappe.
+- [x] **Build 10717** — C-S38 + C-S39 + F10. `EditTaskView` nutzt jetzt `SubTaskRowView` statt eigener HStack-Toggle-Implementierung (DRY mit `SubTaskSheetView`, -34 Zeilen). Status-Action-Logik aus `TodayTaskRowView` Menu-Buttons in `MainTask+Actions.swift` verschoben — drei neue `@MainActor`-Methoden `performMarkOpen()`, `performMarkDone(context:)`, `performMarkSkipped(context:)`. Datei `MainTask+SubTaskOperations.swift` -> `MainTask+Actions.swift` umbenannt, beide Extensions koexistieren mit MARK-Trennung. F10 als Beifang gelöst — Sounds (`playSubTaskDone/Skipped/TaskReset`) in `EditTaskView` jetzt vorhanden.
 - [ ] **Build 10718** — F11-Diagnose: `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView. Voraussetzung: Begriffs-Glossar für die View-Hierarchie (siehe unten). Diagnose mit präzisem Schritt-für-Schritt-Verfahren.
 - [ ] **Build 10719** — Tote-Code-Etappe (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3 nebenbei). Guter Zeitpunkt auch für F1, F8 als Beifang, falls umfangsverträglich.
 - [ ] **Build 10720** — Localization-Cleanup (dynamische `String(localized:)`-Keys auf `String(format:)` umstellen; hardcoded deutsche Strings in Pickern)
@@ -116,8 +116,7 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 - [ ] **F9 · Inline-Expand in Heute-Liste schwer auffindbar**
   Beim 10716-Test wurde festgestellt, dass die Inline-Expand-Funktion (Tap auf Aufgabe in der Heute-Liste klappt Subtasks unter der Zeile aus) nicht intuitiv erreichbar ist. Der primäre Tap-Pfad führt heute zum Sheet. UX-Frage für v1.7.1.
 
-- [ ] **F10 · `EditTaskView` hat eigene Subtask-Toggle-Implementierung ohne Sound**
-  Anders als `TodayTaskRowView` und `SubTaskSheetView` (beide nutzen `InlineSubTaskRow`) hat die `EditTaskView` Z. 776-808 eine selbstgebaute HStack-Implementierung der Subtask-Buttons, die `playSubTaskDone` und `playSubTaskSkipped` nicht aufruft. Wird durch C-S38 in Build 10717 als natürlicher Beifang gelöst, wenn die `EditTaskView` auf `InlineSubTaskRow` umgebaut wird.
+- [x] **F10 · `EditTaskView` hat eigene Subtask-Toggle-Implementierung ohne Sound** — erledigt in Build 10717 als Beifang von C-S38. `EditTaskView` nutzt jetzt `SubTaskRowView` statt der ursprünglich geplanten `InlineSubTaskRow` — `SubTaskRowView` war die passendere Komponente, weil sie Trash-Button und ContextMenu bereits enthält und in `SubTaskSheetView` schon eingesetzt wird.
 
 - [ ] **F11 · `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView**
   Beim Cleanup/Reset über den Editor-Pfad scheint der Sound nicht zu kommen, im Gegensatz zu den anderen zwei Pfaden, die dieselbe Extension nutzen. Da Chris den EditorView-Pfad im Alltag selten nutzt, ist die Reproduzierbarkeit unsicher. Konsistenz ist das Ziel, nicht akute Bug-Behebung. **Diagnose-Etappe in Build 10718** mit präzisem Schritt-für-Schritt-Verfahren und vorher abgestimmter Terminologie.
@@ -216,27 +215,25 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 
 ## Wochenplanung
 
-**Aktueller Stand (25.04.2026, Sitzungsende):**
-- v1.7.0 Build 10716 gepusht und getaggt
+**Aktueller Stand (29.04.2026):**
+- v1.7.0 Build 10717 gepusht und getaggt
 - 10715 in TestFlight, passive 24h-Crash-Verifikation läuft
-- 12 von 108 Code-Review-Befunden erledigt
-- Wochenend-Pause angekündigt
+- 14 von 108 Code-Review-Befunden erledigt
+- F12 als neuer Befund entdeckt
 
 **Vorschlag nächste Woche (in der Reihenfolge der Etappen):**
 
-1. **Build 10717 — C-S38 + C-S39** (UI-Komponenten) + **F10-Bugfix** als Beifang. Mittlere Etappe, betrifft `EditTaskView`, `TodayTaskRowView`, `SubTaskSheetView`. Dauer: ~60-90 Min.
+1. **Begriffs-Glossar erarbeiten** (vor 10718). 15 Min Konzept-Arbeit, eindeutige Bezeichnungen festklopfen.
 
-2. **Begriffs-Glossar erarbeiten** (vor 10718). 15 Min Konzept-Arbeit, eindeutige Bezeichnungen festklopfen.
+2. **Build 10718 — F11-Diagnose** (EditTaskView Cleanup-Sound). Klein, präzise, mit dem neuen Glossar gut adressierbar.
 
-3. **Build 10718 — F11-Diagnose** (EditTaskView Cleanup-Sound). Klein, präzise, mit dem neuen Glossar gut adressierbar.
+3. **Build 10719 — Tote-Code-Etappe** (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3). Beifang: F1, F3, F8 — falls umfangsverträglich. Klein-mittlere Etappe.
 
-4. **Build 10719 — Tote-Code-Etappe** (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3). Beifang: F1, F3, F8 — falls umfangsverträglich. Klein-mittlere Etappe.
+4. **Build 10720 — Localization-Cleanup**. Mittlere Etappe.
 
-5. **Build 10720 — Localization-Cleanup**. Mittlere Etappe.
+5. **Build 10721 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
 
-6. **Build 10721 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
-
-7. **TestFlight-Sammelupload** der Builds 10716–10721 als ein gemeinsamer Test, dann App Store-Submission.
+6. **TestFlight-Sammelupload** der Builds 10716–10721 als ein gemeinsamer Test, dann App Store-Submission.
 
 **Optional zwischendurch (Wochenende):**
 - WAVs Cityflow + Horizont reviewen
