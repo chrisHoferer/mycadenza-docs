@@ -1,7 +1,7 @@
 # MyCadenza – Funktionsübersicht
 
 > Dokumentation der App-Funktionsweise für den Entwickler.
-> Stand: 30.03.2026 · v1.5.2 (Build 10506)
+> Stand: 29.04.2026 · v1.7.0
 
 ---
 
@@ -9,7 +9,7 @@
 
 MyCadenza ist ein persönlicher Tagesplaner für iPhone und iPad. Die App organisiert wiederkehrende Aufgaben mit Teilaufgaben, Kategorien und akustischem Feedback. Der Fokus liegt auf dem aktuellen Tag: Was ist fällig, was kommt noch, was ist erledigt?
 
-**Kernidee:** Jede Aufgabe hat eine Startzeit und eine Gültigkeitsdauer. Ist die Zeit abgelaufen, wird die Aufgabe automatisch als übersprungen markiert und die nächste Wiederholung erstellt. Der Nutzer muss sich nicht um Planung kümmern — die App erledigt das.
+**Kernidee:** Jede Aufgabe hat eine Startzeit und eine Gültigkeitsdauer. Ist die Zeit abgelaufen, bleibt die Aufgabe für eine konfigurierbare **Verfallfrist** noch offen — der Nutzer kann sie nachholen. Erst danach wird sie automatisch als übersprungen markiert und die nächste Wiederholung erstellt. Der Nutzer muss sich nicht um Planung kümmern — die App erledigt das.
 
 ---
 
@@ -21,7 +21,7 @@ Die zentrale Ansicht. Zeigt alle Aufgaben des aktuellen Tages, aufgeteilt in fü
 
 | Sektion | Inhalt | Initial |
 |---|---|---|
-| **Überfällig** | Aufgaben, deren Gültigkeitsdauer abgelaufen ist, die aber noch offen sind | Offen |
+| **Überfällig** | Aufgaben, deren Gültigkeitsdauer abgelaufen ist, die aber innerhalb der Verfallfrist noch offen sind | Offen |
 | **Fällig** | Aufgaben, die jetzt bearbeitet werden können (Startzeit erreicht, noch nicht abgelaufen) | Offen |
 | **Anstehend** | Aufgaben für heute, deren Startzeit noch nicht erreicht ist | Offen |
 | **Ausblick** | Aufgaben für die kommenden Tage, nach Datum gruppiert (Morgen, Übermorgen, ...) | Geschlossen |
@@ -36,6 +36,8 @@ Jede Sektion zeigt ihre Aufgaben nach Kategorien gruppiert. Jede Kategorie ist e
 - Status-Icon rechts (Kreis/Haken/Pfeil) → Menu mit Status-Optionen
 
 **Fortschrittsring:** Oben rechts neben dem Datum zeigt ein grüner Ring den Tagesfortschritt (erledigte/gesamte Aufgaben).
+
+**Musik-Leiste:** Bei aktiver Musikwiedergabe erscheint eine kompakte Player-Leiste mit Track-Info, Play/Pause und AirPlay/Bluetooth-Picker.
 
 ### 2.2 Aufgaben (Editor)
 
@@ -70,10 +72,10 @@ Konfiguration der App, aufgeteilt in Bereiche:
 | Bereich | Funktionen |
 |---|---|
 | **Sprache & Darstellung** | Sprache (via iOS Settings), Erscheinungsbild (System/Hell/Dunkel) |
-| **Aufgaben-Verhalten** | Standard-Gültigkeitsdauer, Standard-Wiederholungsintervall |
-| **Benachrichtigungen** | Erinnerungen, Tägliche Zusammenfassung (beides noch nicht aktiv) |
+| **Aufgaben-Verhalten** | Standard-Gültigkeitsdauer, Standard-Wiederholungsintervall, Verfallfrist |
+| **Benachrichtigungen** | Erinnerungen, Tägliche Zusammenfassung (noch nicht aktiv) |
 | **Klang & Haptik** | Töne an/aus, Lautstärke, Klangwelt für Tag-Beginn/Ende, Haptisches Feedback |
-| **Musik** | Musikanbindung (noch nicht aktiv) |
+| **Musik** | Apple-Music-Anbindung (MusicKit) |
 | **Daten** | Export (JSON), Import, Duplikat-Bereinigung, Alle Daten zurücksetzen |
 | **Über MyCadenza** | Version, Datenschutzrichtlinie, Support & Feedback |
 
@@ -88,7 +90,7 @@ Jede Aufgabe hat:
 | Eigenschaft | Beschreibung |
 |---|---|
 | **Titel** | Frei wählbarer Name |
-| **Startzeit** | Wann die Aufgabe fällig wird |
+| **Startzeit** | Wann die Aufgabe fällig wird (Default: nächste volle halbe Stunde) |
 | **Startdatum** | An welchem Tag (bei Erstellung automatisch berechnet: Uhrzeit in der Zukunft → heute, sonst morgen) |
 | **Gültigkeitsdauer** | Wie lange die Aufgabe offen bleibt (0,5 bis 24 Stunden) |
 | **Wiederholung** | Einmalig, Täglich, Arbeitstäglich, Wöchentlich, Monatlich, Individuell |
@@ -107,9 +109,9 @@ Drei Status: **Offen**, **Erledigt**, **Übersprungen**
 - Alle Teilaufgaben erledigt oder übersprungen → Hauptaufgabe übersprungen
 - Sonst → Hauptaufgabe offen
 
-**Manuelle Überschreibung:** Der Nutzer kann den Status der Hauptaufgabe jederzeit manuell setzen (über das Status-Menu rechts). Dabei werden alle offenen Teilaufgaben auf den gleichen Status gesetzt.
+**Manuelle Überschreibung:** Setzt der Nutzer den Status der Hauptaufgabe selbst (über das Status-Menu rechts), bleibt diese Wahl bestehen, auch wenn sich Teilaufgaben anschließend ändern. Erst wenn die Hauptaufgabe wieder auf "offen" gesetzt wird, übernimmt die App die automatische Ableitung. Dabei werden alle offenen Teilaufgaben jeweils auf den gleichen Status gesetzt.
 
-**Automatisches Überspringen:** Wenn die Gültigkeitsdauer abläuft und die Aufgabe noch offen ist, wird sie automatisch als übersprungen markiert. Alle offenen Teilaufgaben werden ebenfalls übersprungen.
+**Verfallfrist und automatisches Überspringen:** Wenn die Gültigkeitsdauer abläuft, wird die Aufgabe nicht sofort übersprungen — sie bleibt für eine konfigurierbare Verfallfrist (Default: 1 Stunde) "überfällig aber offen". Innerhalb dieser Frist kann der Nutzer die Aufgabe noch erledigen. Erst danach wird sie automatisch als übersprungen markiert; alle offenen Teilaufgaben werden ebenfalls übersprungen.
 
 ### 3.3 Wiederholungen
 
@@ -138,6 +140,8 @@ Spezialfall für einmalige Aufgaben wie Einkaufslisten oder Projektpläne:
 - Hat zusätzliche Aufräum-Optionen:
   - **Erledigte entfernen:** Erstellt einen Historie-Snapshot, löscht dann die erledigten/übersprungenen Teilaufgaben
   - **Alle zurücksetzen:** Erstellt einen Historie-Snapshot, setzt alle Teilaufgaben auf offen zurück
+
+Beide Operationen geben akustisches Feedback (Cleanup- und Reset-Sound), egal aus welcher Ansicht sie ausgelöst werden.
 
 ---
 
@@ -175,30 +179,30 @@ Templates sind Vorlagen für Aufgaben, die häufig mit den gleichen Einstellunge
 
 ### 6.1 Konzept
 
-Fünf Aktionen lösen Klänge und haptisches Feedback aus:
+Klänge und haptisches Feedback begleiten alle wichtigen Übergänge — Tagesablauf, Aufgabenstatus, Datenoperationen. Die Aktionen sind in vier Gruppen organisiert:
 
-| Aktion | Auslöser | Sound-Dauer |
-|---|---|---|
-| Tag begonnen | App-Start (zukünftig) | 2 Sek. |
-| Teilaufgabe erledigt | Teilaufgabe auf "erledigt" gesetzt | 0,5 Sek. |
-| Teilaufgabe übersprungen | Teilaufgabe auf "übersprungen" gesetzt | 0,5 Sek. |
-| Hauptaufgabe komplett | Alle Teilaufgaben durch oder manuell erledigt | 1,5 Sek. |
-| Tag beendet | App-Ende (zukünftig) | 2,5 Sek. |
+| Gruppe | Beispiele |
+|---|---|
+| **Tagbezug** | Tag begonnen (App-Start), Tag komplett (alle Aufgaben erledigt), Tag beendet |
+| **Aufgabenbezug** | Aufgabe fällig, überfällig, verfallen; Aufgabe erstellt, gelöscht; Erledigte entfernt, Aufgabe zurückgesetzt |
+| **Teil- und Hauptaufgabe** | Teilaufgabe erledigt/übersprungen; Hauptaufgabe erledigt/übersprungen/komplett; Überfällige Aufgabe doch noch erledigt |
+| **Settings** | Export oder Import abgeschlossen |
+
+Jede Aktion hat einen eigenen Klang, der pro Klangwelt unterschiedlich klingt. Aufgaben mit hoher Priorität werden etwas lauter gespielt.
 
 ### 6.2 Klangwelten
 
-Vier verschiedene Sound-Sets mit unterschiedlichem Charakter:
+Fünf verschiedene Sound-Sets mit unterschiedlichem Charakter:
 
-| Klangwelt | Charakter | Status |
-|---|---|---|
-| **Morgenwald** 🌿 | Natur, Vögel, Wasser, Wind | ✅ Implementiert |
-| **Salon** 🎹 | Klavier, Akustik, Kammermusik | ✅ Implementiert |
-| **Cityflow** 🏙️ | Urban, Lo-Fi, Café-Atmosphäre | ⬜ Noch zu generieren |
-| **Horizont** 🌌 | Ambient, elektronische Pads | ⬜ Noch zu generieren |
+| Klangwelt | Charakter |
+|---|---|
+| **System** ⚙️ | Klassische iOS-System-Sounds (kein eigenes Sound-Set) |
+| **Morgenwald** 🌿 | Natur, Vögel, Wasser, Wind |
+| **Salon** 🎹 | Klavier, Akustik, Kammermusik |
+| **Cityflow** 🏙️ | Urban, Lo-Fi, Café-Atmosphäre |
+| **Horizont** 🌌 | Ambient, elektronische Pads |
 
 **Zuordnung:** Jede Kategorie hat eine Klangwelt. Tag-Beginn/Ende hat eine eigene globale Einstellung.
-
-**Priorität:** Aufgaben mit hoher Priorität werden etwas lauter gespielt (Faktor 1.0 vs. 0.85).
 
 ### 6.3 Haptik
 
@@ -211,7 +215,7 @@ Jede Aktion hat ein eigenes haptisches Muster:
 ### 6.4 Audio-Verhalten
 
 - Audio Session: `.ambient` — respektiert den Silent-Switch und mischt mit anderer Musik
-- Sounds liegen als WAV (48kHz) im Bundle-Root
+- Sounds liegen als WAV (48 kHz) im Bundle, gegliedert nach Klangwelt
 - Dateinamen: `{klangwelt}_{aktion}.wav` (z.B. `morgenwald_teilaufgabeErledigt.wav`)
 
 ---
@@ -267,28 +271,42 @@ Alle Daten werden automatisch über iCloud synchronisiert. Änderungen auf einem
 ### 8.3 Hintergrund-Verarbeitung
 
 Die App verarbeitet Aufgaben auch im Hintergrund:
-- Abgelaufene Aufgaben werden automatisch übersprungen
+- Abgelaufene Aufgaben durchlaufen die Verfallfrist und werden danach automatisch übersprungen
 - Nächste Wiederholungen werden erstellt
 - Badge-Zähler wird aktualisiert
 - Background Refresh alle 15 Minuten
 
 ---
 
-## 9. Präsentationsmodus (nur Debug)
+## 9. Apple-Music-Integration
 
-Für App Store Screenshots: Sichert die Echtdaten lokal, lädt englische Demo-Daten mit 6 Kategorien und realistischen Aufgaben über mehrere Tage. Wiederherstellung nur auf dem gleichen Gerät möglich.
+MyCadenza bindet Apple Music über MusicKit an. Aktive Wiedergabe erscheint als kompakte Player-Leiste in der Heute-Ansicht — mit Titel, Interpret, Artwork, Play/Pause und AirPlay/Bluetooth-Picker.
+
+**Voraussetzung:** Apple-Music-Abo. Beim ersten Aufruf fragt die App die Berechtigung zum Zugriff auf die Mediathek ab.
+
+**Hinweis:** MusicKit funktioniert nicht im iOS Simulator — Tests und Demonstrationen brauchen ein echtes Gerät.
 
 ---
 
-## 10. Geplante Features
+## 10. "Was ist neu" und Update-Hinweis
+
+**"Was ist neu":** Nach einem Versionsupdate zeigt MyCadenza beim ersten Start ein Sheet mit den wichtigsten Änderungen der neuen Version. Neue Nutzer (gerade erst durch das Onboarding gegangen) sehen es nicht.
+
+**Update-Hinweis:** Beim App-Start und bei jedem Wechsel in den Vordergrund prüft die App (max. einmal pro Tag), ob im App Store eine neuere Version verfügbar ist. Falls ja, erscheint ein dezenter Alert mit "Aktualisieren"-Button.
+
+---
+
+## 11. Präsentationsmodus
+
+Für App Store Screenshots: Lädt englische Demo-Daten mit mehreren Kategorien und realistischen Aufgaben über mehrere Tage. Die Echtdaten bleiben unangetastet — Präsentation und Produktion verwenden physisch getrennte Datenspeicher. Der Wechsel zwischen den Modi erfordert einen App-Neustart.
+
+---
+
+## 12. Geplante Features
 
 | Feature | Beschreibung |
 |---|---|
-| Cityflow + Horizont | Zwei weitere Klangwelten via ElevenLabs generieren |
-| Standard-Werte in AddTaskView | defaultValidityDuration und defaultRepeatInterval aus Settings übernehmen |
+| Standard-Werte in AddTaskView | Default-Gültigkeitsdauer und Default-Wiederholungsintervall aus den Einstellungen automatisch übernehmen |
 | In-App Sprachauswahl | Sprache direkt in der App wählen statt über iOS Settings |
-| Datenschutzrichtlinie | URL in den Einstellungen hinterlegen |
-| Support & Feedback | Kontaktmöglichkeit in den Einstellungen |
-| Musik-Integration | Apple Music / Spotify Anbindung (Playlist pro Kategorie) |
 | Tägliche Zusammenfassung | Push-Notification mit Tagesübersicht zur konfigurierbaren Uhrzeit |
 | Algorithmische Tagesmelodie | Generierte Kurzmelodie als musikalisches Abbild des Tagesfortschritts |
