@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 02.05.2026 · Builds 10718 + 10719 gepusht und getaggt · F11 widerlegt
+> Stand: 02.05.2026 abends · Builds 10718 + 10719 + 10720 gepusht und getaggt · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen
 
 ---
 
@@ -44,7 +44,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] **Build 10717** — C-S38 + C-S39 + F10. `EditTaskView` nutzt jetzt `SubTaskRowView` statt eigener HStack-Toggle-Implementierung (DRY mit `SubTaskSheetView`, -34 Zeilen). Status-Action-Logik aus `TodayTaskRowView` Menu-Buttons in `MainTask+Actions.swift` verschoben — drei neue `@MainActor`-Methoden `performMarkOpen()`, `performMarkDone(context:)`, `performMarkSkipped(context:)`. Datei `MainTask+SubTaskOperations.swift` -> `MainTask+Actions.swift` umbenannt, beide Extensions koexistieren mit MARK-Trennung. F10 als Beifang gelöst — Sounds (`playSubTaskDone/Skipped/TaskReset`) in `EditTaskView` jetzt vorhanden.
 - [x] **Build 10718** — Settings-UI: Demo & Präsentation für Endnutzer öffnen + "Was ist neu"-Button + DEBUG-Sektion aufräumen + Localization-Lücke fixen. Commit `24eebf5`, Tag `v1.7.0-b10718`. Eingeschoben — die ursprünglich für 10718 geplante F11-Diagnose ist entfallen, weil F11 widerlegt wurde (siehe unten).
 - [x] **Build 10719** — Reset on Activation für Präsentationsmodus inkl. Hilfetext mit Verlust-Hinweis. Commit `031de78`, Tag `v1.7.0-b10719`. Eingeschoben — die ursprünglich für 10719 geplante Tote-Code-Etappe rückt auf 10720.
-- [ ] **Build 10720** — Tote-Code-Etappe (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3 nebenbei). Guter Zeitpunkt auch für F1, F3, F8 als Beifang, falls umfangsverträglich.
+- [x] **Build 10720** — Tote-Code (C-S5/C-S16/C-S18/C-S22/C-S29 + C-M3) + F1/F3/F8-Beifang. Commit `9ad814c`, Tag `v1.7.0-b10720`. Diagnose-Phase mit Zwischen-Bericht vorab (Mapping aus Code, weil CodeReview-IDs ohne Detail-Beschreibung). Beifang aus dem Aufräumen: `private func deleteAllInstances(of:)` in `EditorView.swift` wurde durch die `.swipeActions`-Entfernung aufrufslos und ist mit entfernt. Vier Localization-Keys (`scheduleWithContext`-only) wurden von Xcode automatisch als `extractionState: stale` markiert — Cleanup gehört in 10721.
 - [ ] **Build 10721** — Localization-Cleanup (dynamische `String(localized:)`-Keys auf `String(format:)` umstellen; hardcoded deutsche Strings in Pickern)
 - [ ] **Build 10722** — Import-Sperre bei aktivem CloudKit-Sync (B-M2) — letzter v1.7.0-Release-Blocker
 - [ ] **Build 10723** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
@@ -80,18 +80,11 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 
 ### UX-Findings für v1.7.1
 
-- [ ] **F1 · Abgeschlossen-Sektion Darstellung schärfen**
-  Der linke Kategorie-Farbbalken und das Reorder-Handle (die drei Striche rechts) wirken in der Abgeschlossen-Sektion unpassend — erledigte Aufgaben sind "Ergebnisbereich", nicht "Aktionsbereich". Ziele:
-  - **Farbbalken nach Status:** grün für `done`, gold-gedämpft für `skipped` — statt Kategorie-Farbe.
-  - **Status-Haken-Farbe konsistent:** Aktuell ist der Hauptaufgaben-Status-Haken in Abgeschlossen gold, sollte aber zur Status-Logik passen — grün für `done`, gold für `skipped`. Konsistent mit dem Farbbalken.
-  - **Reorder-Handle entfernen:** Sortieren in Abgeschlossen ergibt inhaltlich keinen Sinn.
-  - **Keine eigene View:** Änderungen konditional in `TodayTaskRowView` anhand des Sektionskontexts. Bewusst *nicht* als eigene Zeilenvariante implementiert — würde die Komplexität unverhältnismäßig erhöhen.
-  Kandidat für Build 10719 (Tote-Code/Cleanup) als Beifang.
+- [x] **F1 · Abgeschlossen-Sektion Darstellung schärfen** — erledigt in Build 10720 als Beifang. `TodayTaskRowView` bekommt `isInCompletedSection: Bool = false`, in der Abgeschlossen-Sektion: Farbbalken grün bei `.done` / gold-gedämpft (60% Opazität) bei `.skipped`, Status-Haken grün bei `.done`, Reorder-Handle via `.moveDisabled(true)` weg. Keine eigene Zeilenvariante — konditional in `TodayTaskRowView` über Sektionskontext durchgereicht.
 
 - [x] **F2 · `markOpen` soll Teilaufgaben durchreichen** — erledigt in Build 10712c. `.open`-Case in `applyStatusToSubTasks()` setzt jetzt alle `done`/`skipped`-Teilaufgaben auf `open` zurück. `markOpen` entsperrt grundsätzlich (`isManualStatus = false`), symmetrisch zu `markDone`/`markSkipped`.
 
-- [ ] **F3 · SubTask-Sheet schließt sich nicht nach Löschen der Hauptaufgabe**
-  Wenn die Hauptaufgabe aus dem Edit-Dialog heraus gelöscht wird, bleibt das SubTask-Sheet geöffnet und referenziert eine nicht mehr existierende Aufgabe. Sheet sollte automatisch geschlossen werden — entweder über `dismiss()` im Lösch-Pfad oder über Reaktion auf `parentTask == nil`. Kandidat für 10719 als Beifang.
+- [x] **F3 · SubTask-Sheet schließt sich nicht nach Löschen der Hauptaufgabe** — erledigt in Build 10720 als Beifang. Variante A umgesetzt: `EditTaskView` bekommt optionalen `onDelete: (() -> Void)?`-Callback, der nach erfolgtem Delete vor dem eigenen `dismiss()` aufgerufen wird. `SubTaskSheetView` reicht beim Edit-Aufruf das eigene `dismiss` durch — Cascade-Schließen beider gestapelter Sheets verifiziert.
 
 - [ ] **F4 · `markOpen` auf erledigter Wiederholung lässt Folge-Instanz bestehen**
   Szenario: Aufgabe mit Wiederholung ist erledigt, Scheduler hat bereits die nächste Instanz erstellt. Beim manuellen Zurücksetzen der erledigten Instanz auf `open` bleibt die Folge-Instanz bestehen → zwei sichtbare Instanzen derselben Wiederholungsgruppe. Beim Mehrfach-Abschluss greift `cleanupDuplicates()` korrekt, der Zwischenzustand bleibt aber für den Nutzer verwirrend.
@@ -110,9 +103,7 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
   - Sollte es bei wiederkehrenden Aufgaben einen anderen Mechanismus geben — etwa "Teilaufgaben-Vorlage zurücksetzen für nächste Wiederholung"?
   Konzept-Punkt, gehört thematisch zum Plan-vs-Realität-Block.
 
-- [ ] **F8 · "Alle zurücksetzen" auch sichtbar wenn nichts zu reseten**
-  Aktueller Code: `if showCleanupOptions { Button("Alle zurücksetzen") { ... } }` — der Reset-Button ist sichtbar, sobald eine doesNotExpire-Aufgabe Teilaufgaben hat, unabhängig davon ob die Teilaufgaben bereits offen sind. Ein Klick erzeugt dann einen leeren Historie-Snapshot ohne sinnvolle Wirkung.
-  **Korrekte UX wäre:** `if (subTasks ?? []).contains { $0.status != .open } || status != .open { Button(...) { ... } }`. Kandidat für 10719 als Beifang.
+- [x] **F8 · "Alle zurücksetzen" auch sichtbar wenn nichts zu resetten** — erledigt in Build 10720 als Beifang. Drei Stellen angepasst (EditTaskView, TodayTaskRowView, SubTaskSheetView): Reset-Button nur sichtbar, wenn `(subTasks ?? []).contains { $0.status != .open } || status != .open`. In `SubTaskSheetView` zusätzlich das paintbrush-Toolbar-Menü versteckt, wenn weder „Erledigte entfernen" noch „Alle zurücksetzen" greifen.
 
 - [ ] **F9 · Inline-Expand in Heute-Liste schwer auffindbar**
   Beim 10716-Test wurde festgestellt, dass die Inline-Expand-Funktion (Tap auf Aufgabe in der Heute-Liste klappt Subtasks unter der Zeile aus) nicht intuitiv erreichbar ist. Der primäre Tap-Pfad führt heute zum Sheet. UX-Frage für v1.7.1.
@@ -125,6 +116,16 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
   Beim 10717-Test entdeckt: Wenn alle Teilaufgaben einer Hauptaufgabe auf `done` (oder `skipped`) gesetzt werden, propagiert `syncStatus()` den abgeleiteten Status korrekt auf die Hauptaufgabe — setzt aber zusätzlich `isManualStatus = true`. Folge: Wenn der Nutzer anschließend die Teilaufgaben wieder auf `open` setzt, ignoriert `syncStatus()` die Änderung, weil die Hauptaufgabe gelockt ist. Die Hauptaufgabe bleibt auf `done` hängen.
   **Korrekt wäre:** `syncStatus()` darf das Lock-Flag NIE setzen — Locking ist ausschließlich Sache der `mark*(manually:)`-Methoden und `applyExpiry()`. Fix vermutlich einzeilig in `Models.swift`, aber Test-Aufwand: alle Status-Wechsel-Pfade neu durchspielen (Teilaufgaben → Hauptaufgabe und zurück, mit/ohne Lock).
   Kandidat für 10718 oder eigene Etappe; thematisch verwandt mit B1 (Historie als Protokoll) und F4 (markOpen lässt Folge-Instanz bestehen) — Plan-vs-Realität-Block.
+
+- [ ] **F13 · Reset einer Teilaufgabe auf `.open` lässt Hauptaufgaben-Status auf `.done` stehen**
+  Beim 10720-Test reproduziert: Aufgabe ohne Teilaufgaben angelegt, Teilaufgabe nachträglich hinzugefügt, Teilaufgabe als erledigt markiert (Hauptaufgabe wurde automatisch mitskaliert auf `.done` und in Abgeschlossen verschoben), Teilaufgabe wieder auf `.open` zurückgesetzt — Hauptaufgabe blieb aber auf `.done`.
+  **Vermutete Ursache:** `syncStatus()` läuft nicht beim Wechsel einer einzelnen Teilaufgabe, oder `isManualStatus` blockiert (siehe F12 — vermutlich derselbe Lock-Mechanismus, der bei Teilaufgaben-Änderung greift).
+  v1.7.1. Sehr wahrscheinlich gleicher Fix-Pfad wie F12.
+
+- [ ] **F14 · `AddTaskView` braucht spürbar lang, bis das Textfeld fokussierbar ist**
+  Beim 10720-Test beobachtet: Nach Tap auf „Aufgabe hinzufügen" dauert es spürbar, bis das erste Textfeld den Fokus annimmt und die Tastatur erscheint. Ursache offen.
+  **Lade-Profil zu prüfen:** Defaults-Berechnung beim View-Init (Standard-Gültigkeitsdauer, Verfallfrist, Standard-Wiederholung), Sheet-Animation und FocusState-Timing, mögliche iCloud-Sync-Side-Effects beim Anlegen einer neuen `MainTask`-Instanz, Kategorie-Liste-Fetch.
+  v1.7.1.
 
 ### Methodische TODOs vor Diagnose-Etappen
 
@@ -234,29 +235,30 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 ## Wochenplanung
 
 **Aktueller Stand (02.05.2026 abends):**
-- v1.7.0 Builds 10718 + 10719 gepusht und getaggt
-- 14 von 108 Code-Review-Befunden erledigt
+- v1.7.0 Builds 10718 + 10719 + 10720 gepusht und getaggt
+- ~17 von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720, plus die schon vorhandenen 14)
+- F1, F3, F8 erledigt (in Build 10720 mitgelöst)
 - F11 verifiziert und widerlegt (Sound im Edit-Sheet hörbar) — Mini-Befund zu `.erledigteEntfernt`-Fallback an KlangweltReview/WAV-Review angehängt
 - F12 (`syncStatus()`-Lock) bleibt offener Befund für v1.7.1
-- Buildplan-Verschiebung: 10718 + 10719 wurden durch Settings-UI-Etappe und Reset-on-Activation für Präsentationsmodus belegt; ursprünglich für 10718–10721 geplante Etappen rutschen um zwei Buildnummern nach hinten
+- F13 + F14 als neue UX-Findings v1.7.1 aufgenommen (beim 10720-Test entdeckt)
+- Nächste Etappe ist Build 10721 (Localization-Cleanup)
 
 **Vorschlag nächste Woche (in der Reihenfolge der Etappen):**
 
-1. **Build 10720 — Tote-Code-Etappe** (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3). Beifang: F1, F3, F8 — falls umfangsverträglich. Klein-mittlere Etappe.
+1. **Build 10721 — Localization-Cleanup**. Mittlere Etappe. Inkl. der vier `extractionState: stale`-Keys aus 10720 (`scheduleWithContext`-only Strings).
 
-2. **Build 10721 — Localization-Cleanup**. Mittlere Etappe.
+2. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
 
-3. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
-
-4. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
+3. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
 
 **Optional zwischendurch (Wochenende):**
 - WAVs Cityflow + Horizont reviewen (inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation)
 - System-Klangwelt-WAVs vorbereiten
 
 **Nach v1.7.0-Release:**
-- v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9, F12 — Plan-vs-Realität-Block
-- F12 (`syncStatus()` lockt fälschlicherweise) — Fix vermutlich einzeilig, aber Test-Aufwand spürbar
+- v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9, F12, F13 — Plan-vs-Realität-Block
+- F12 + F13 (`syncStatus()`/Lock-Mechanismus) — vermutlich gleicher Fix-Pfad, Test-Aufwand spürbar (alle Status-Wechsel-Pfade durchspielen)
+- F14 (`AddTaskView`-Fokus-Latenz) — Diagnose-Etappe, Lade-Profil prüfen
 - TemplatePaletteReview, KlangweltReview, Hauptaufgaben-Design
 - Strict Concurrency auf "Complete" als eigene Etappe
 
