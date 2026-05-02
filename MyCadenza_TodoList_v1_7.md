@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 02.05.2026 abends · Builds 10718 + 10719 + 10720 gepusht und getaggt · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen
+> Stand: 02.05.2026 abends · Builds 10718 + 10719 + 10720 + 10721 gepusht und getaggt · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen · Cleanup-Bestätigung-Latentbug seit v1.6.1 in 10721 mit-eliminiert
 
 ---
 
@@ -45,7 +45,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] **Build 10718** — Settings-UI: Demo & Präsentation für Endnutzer öffnen + "Was ist neu"-Button + DEBUG-Sektion aufräumen + Localization-Lücke fixen. Commit `24eebf5`, Tag `v1.7.0-b10718`. Eingeschoben — die ursprünglich für 10718 geplante F11-Diagnose ist entfallen, weil F11 widerlegt wurde (siehe unten).
 - [x] **Build 10719** — Reset on Activation für Präsentationsmodus inkl. Hilfetext mit Verlust-Hinweis. Commit `031de78`, Tag `v1.7.0-b10719`. Eingeschoben — die ursprünglich für 10719 geplante Tote-Code-Etappe rückt auf 10720.
 - [x] **Build 10720** — Tote-Code (C-S5/C-S16/C-S18/C-S22/C-S29 + C-M3) + F1/F3/F8-Beifang. Commit `9ad814c`, Tag `v1.7.0-b10720`. Diagnose-Phase mit Zwischen-Bericht vorab (Mapping aus Code, weil CodeReview-IDs ohne Detail-Beschreibung). Beifang aus dem Aufräumen: `private func deleteAllInstances(of:)` in `EditorView.swift` wurde durch die `.swipeActions`-Entfernung aufrufslos und ist mit entfernt. Vier Localization-Keys (`scheduleWithContext`-only) wurden von Xcode automatisch als `extractionState: stale` markiert — Cleanup gehört in 10721.
-- [ ] **Build 10721** — Localization-Cleanup (dynamische `String(localized:)`-Keys auf `String(format:)` umstellen; hardcoded deutsche Strings in Pickern)
+- [x] **Build 10721** — Localization-Cleanup (stale-keys + dynamische Keys + hardcoded Strings). Commit `8bb38c6`, Tag `v1.7.0-b10721`. Diagnose-Phase mit Zwischen-Bericht vorab. Drei Kategorien: (C) 4 echt-stale aus `scheduleWithContext` entfernt + 4 falsch-stale auf `extractionState: manual` (DEBUG-only Keys), (A) 26 Stellen auf `String(format:)` migriert (~15 unique Format-Keys, fast alle existierten bereits in xcstrings mit EN), (B) `AppMode.swift` `"Praesentation"` → `"Präsentation"` mit Umlaut. Erfreulicher Beifang: latenter Bug seit v1.6.1 — der Cleanup-Bestätigungsdialog zeigte im DE den Source-Key `"Cleanup Bestätigung 2"` als Müll-Text statt der eigentlichen Message. Heute beim 10721-Test entdeckt; DE+EN sauber befüllt mit Plural-Format-Wortlaut, Singular-Holprigkeit pragmatisch akzeptiert (kein `(n)`-Hack).
 - [ ] **Build 10722** — Import-Sperre bei aktivem CloudKit-Sync (B-M2) — letzter v1.7.0-Release-Blocker
 - [ ] **Build 10723** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
 - [ ] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
@@ -56,7 +56,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] `@Relationship inverse:` Attribute in `Models.swift` und `TaskTemplate.swift` ergänzt
 - [ ] `cleanupDuplicates()` – jetzt preservation-score-basiert, bleibt flagged (Review)
 - [ ] `processAllTasks()` – Debounce- und ScenePhase-Handler-Cleanup finalisieren
-- [ ] xcstrings – 1–2 verbleibende Artefakte bereinigen
+- [x] xcstrings – verbleibende Artefakte bereinigt (in Build 10721 mitgemacht: 4 stale entfernt, 4 falsch-stale auf `manual`, leerer `"Praesentation"`-Eintrag mit raus)
 
 ### Erledigte Verifikations-Punkte
 
@@ -213,6 +213,9 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 - [ ] **Strict Concurrency auf "Complete" umstellen** (nach v1.7.0-Release)
   Heute läuft das Projekt mit "Minimal" oder "Targeted" Strict Concurrency. Eine Umstellung auf "Complete" wird viele Warnings/Fehler auswerfen, weil Singletons (`MusicManager`, `PersistenceController`, `DataMigrator`, `DemoDataProvider`) systematisch annotiert werden müssen. Eigene Etappe wegen erwarteter Welle. Bereits annotiert (Stand 25.04.2026): `TaskScheduler` (Build 10715), `SoundManager` (war schon), `MainTask`-Extension für SubTask-Ops (Build 10716).
 
+- [ ] **Plural-Variations für Format-Strings** (Vermerk aus 10721)
+  Heute werden Format-Strings mit `%lld` ohne Plural-Differenzierung gespeichert (z. B. „%lld erledigte Teilaufgaben werden entfernt." — bei 1 holprig, aber pragmatisch akzeptiert). Apple-`xcstrings` unterstützt Plural-Variations via `variations`/Genitiv-Marker; nötig spätestens bei Sprachen mit komplexer Pluralmorphologie (RU, AR, PL). Folge-Item für die Strategiesitzung nach v1.7.1. Kein dringender Punkt, solange wir bei DE/EN bleiben.
+
 ### Features
 
 - [ ] **CarPlay-Integration** – Musiksteuerung aus dem Auto
@@ -235,21 +238,20 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 ## Wochenplanung
 
 **Aktueller Stand (02.05.2026 abends):**
-- v1.7.0 Builds 10718 + 10719 + 10720 gepusht und getaggt
-- ~17 von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720, plus die schon vorhandenen 14)
+- v1.7.0 Builds 10718 + 10719 + 10720 + 10721 gepusht und getaggt — vier Builds an einem Tag, alle einzeln getestet
+- ~17 von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720, plus die schon vorhandenen 14). Localization-Cluster ist in 10721 als Cluster (ohne eigene C-IDs) aufgelöst.
 - F1, F3, F8 erledigt (in Build 10720 mitgelöst)
 - F11 verifiziert und widerlegt (Sound im Edit-Sheet hörbar) — Mini-Befund zu `.erledigteEntfernt`-Fallback an KlangweltReview/WAV-Review angehängt
 - F12 (`syncStatus()`-Lock) bleibt offener Befund für v1.7.1
 - F13 + F14 als neue UX-Findings v1.7.1 aufgenommen (beim 10720-Test entdeckt)
-- Nächste Etappe ist Build 10721 (Localization-Cleanup)
+- Latentbug seit v1.6.1 (Cleanup-Bestätigung zeigte Source-Key statt Übersetzung) in 10721 mit-eliminiert
+- **Nächste Etappe ist Build 10722 (Import-Sperre B-M2) — letzter v1.7.0-Release-Blocker**
 
 **Vorschlag nächste Woche (in der Reihenfolge der Etappen):**
 
-1. **Build 10721 — Localization-Cleanup**. Mittlere Etappe. Inkl. der vier `extractionState: stale`-Keys aus 10720 (`scheduleWithContext`-only Strings).
+1. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
 
-2. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
-
-3. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
+2. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
 
 **Optional zwischendurch (Wochenende):**
 - WAVs Cityflow + Horizont reviewen (inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation)
