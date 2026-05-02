@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 29.04.2026 · Build 10717 gepusht und getaggt · F12 entdeckt
+> Stand: 02.05.2026 · Builds 10718 + 10719 gepusht und getaggt · F11 widerlegt
 
 ---
 
@@ -42,13 +42,14 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] **Build 10715** — TaskScheduler `@MainActor`-Refactor (B-S1) + TestFlight-BG-Task-Crash-Fix. Variante B aus der Refactor-Diskussion: `@MainActor` auf gesamte Klasse, BG-Closure hopt mit `Task { @MainActor in ... }`, `DispatchWorkItem` → `Task` migriert. Build grün ohne CadenzaApp-Anpassung. Drei-Stufen-Test (Simulator → echtes iPhone → TestFlight) erfolgreich. TestFlight-Verifikation läuft passiv 24h.
 - [x] **Build 10716** — SubTask-Operations konsolidieren (C-S37). Neue Datei `MainTask+SubTaskOperations.swift` mit `@MainActor`-Extension, drei vorher in `EditTaskView`/`TodayTaskRowView`/`SubTaskSheetView` duplizierte Methoden zusammengeführt. Drei Sub-Bugfixes als Beifang: (1) `isManualStatus = false` vor `syncStatus()` jetzt überall konsistent, (2) `playCompletedRemoved`-Sound im SubTaskSheetView jetzt vorhanden (vorher fehlte er komplett), (3) `playTaskReset`-Sound im SubTaskSheetView jetzt vorhanden. Cleanup-Unlock-Ausreißer aus 10711 mitgelöst.
 - [x] **Build 10717** — C-S38 + C-S39 + F10. `EditTaskView` nutzt jetzt `SubTaskRowView` statt eigener HStack-Toggle-Implementierung (DRY mit `SubTaskSheetView`, -34 Zeilen). Status-Action-Logik aus `TodayTaskRowView` Menu-Buttons in `MainTask+Actions.swift` verschoben — drei neue `@MainActor`-Methoden `performMarkOpen()`, `performMarkDone(context:)`, `performMarkSkipped(context:)`. Datei `MainTask+SubTaskOperations.swift` -> `MainTask+Actions.swift` umbenannt, beide Extensions koexistieren mit MARK-Trennung. F10 als Beifang gelöst — Sounds (`playSubTaskDone/Skipped/TaskReset`) in `EditTaskView` jetzt vorhanden.
-- [ ] **Build 10718** — F11-Diagnose: `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView. Voraussetzung: Begriffs-Glossar für die View-Hierarchie (siehe unten). Diagnose mit präzisem Schritt-für-Schritt-Verfahren.
-- [ ] **Build 10719** — Tote-Code-Etappe (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3 nebenbei). Guter Zeitpunkt auch für F1, F8 als Beifang, falls umfangsverträglich.
-- [ ] **Build 10720** — Localization-Cleanup (dynamische `String(localized:)`-Keys auf `String(format:)` umstellen; hardcoded deutsche Strings in Pickern)
-- [ ] **Build 10721** — Import-Sperre bei aktivem CloudKit-Sync (B-M2) — letzter v1.7.0-Release-Blocker
-- [ ] **Build 10722** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
-- [ ] **Build 10723** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
-- [ ] **Build 10724** — SoundManager preview-API (C-S42)
+- [x] **Build 10718** — Settings-UI: Demo & Präsentation für Endnutzer öffnen + "Was ist neu"-Button + DEBUG-Sektion aufräumen + Localization-Lücke fixen. Commit `24eebf5`, Tag `v1.7.0-b10718`. Eingeschoben — die ursprünglich für 10718 geplante F11-Diagnose ist entfallen, weil F11 widerlegt wurde (siehe unten).
+- [x] **Build 10719** — Reset on Activation für Präsentationsmodus inkl. Hilfetext mit Verlust-Hinweis. Commit `031de78`, Tag `v1.7.0-b10719`. Eingeschoben — die ursprünglich für 10719 geplante Tote-Code-Etappe rückt auf 10720.
+- [ ] **Build 10720** — Tote-Code-Etappe (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3 nebenbei). Guter Zeitpunkt auch für F1, F3, F8 als Beifang, falls umfangsverträglich.
+- [ ] **Build 10721** — Localization-Cleanup (dynamische `String(localized:)`-Keys auf `String(format:)` umstellen; hardcoded deutsche Strings in Pickern)
+- [ ] **Build 10722** — Import-Sperre bei aktivem CloudKit-Sync (B-M2) — letzter v1.7.0-Release-Blocker
+- [ ] **Build 10723** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
+- [ ] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
+- [ ] **Build 10725** — SoundManager preview-API (C-S42)
 
 ### Offene Code-Quality-Items
 
@@ -118,8 +119,7 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 
 - [x] **F10 · `EditTaskView` hat eigene Subtask-Toggle-Implementierung ohne Sound** — erledigt in Build 10717 als Beifang von C-S38. `EditTaskView` nutzt jetzt `SubTaskRowView` statt der ursprünglich geplanten `InlineSubTaskRow` — `SubTaskRowView` war die passendere Komponente, weil sie Trash-Button und ContextMenu bereits enthält und in `SubTaskSheetView` schon eingesetzt wird.
 
-- [ ] **F11 · `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView**
-  Beim Cleanup/Reset über den Editor-Pfad scheint der Sound nicht zu kommen, im Gegensatz zu den anderen zwei Pfaden, die dieselbe Extension nutzen. Da Chris den EditorView-Pfad im Alltag selten nutzt, ist die Reproduzierbarkeit unsicher. Konsistenz ist das Ziel, nicht akute Bug-Behebung. **Diagnose-Etappe in Build 10718** mit präzisem Schritt-für-Schritt-Verfahren und vorher abgestimmter Terminologie.
+- [x] **F11 · `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView** — verifiziert 02.05.2026, Bug nicht reproduzierbar. Sound im Edit-Sheet ist hörbar, F11 widerlegt. **Mini-Befund (an WAV-Review/KlangweltReview angehängt):** `.erledigteEntfernt` fällt in einer Klangwelt offenbar auf `.teilaufgabeUebersprungen` zurück (Fallback-Mechanik in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Klangwelten-Review prüfen.
 
 - [ ] **F12 · `syncStatus()` lockt fälschlicherweise**
   Beim 10717-Test entdeckt: Wenn alle Teilaufgaben einer Hauptaufgabe auf `done` (oder `skipped`) gesetzt werden, propagiert `syncStatus()` den abgeleiteten Status korrekt auf die Hauptaufgabe — setzt aber zusätzlich `isManualStatus = true`. Folge: Wenn der Nutzer anschließend die Teilaufgaben wieder auf `open` setzt, ignoriert `syncStatus()` die Änderung, weil die Hauptaufgabe gelockt ist. Die Hauptaufgabe bleibt auf `done` hängen.
@@ -159,7 +159,7 @@ Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
 ### Reviews & Design
 
 - [ ] **TemplatePaletteReview** – Durchsicht der Template-Farbpalette
-- [ ] **KlangweltReview** – Durchsicht der vier Klangwelten
+- [ ] **KlangweltReview** – Durchsicht der vier Klangwelten. **Mini-Befund aus F11-Verifikation (02.05.2026):** `.erledigteEntfernt` fällt in einer Klangwelt auf `.teilaufgabeUebersprungen` zurück (Fallback in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Review identifizieren und schließen.
 - [ ] **System-Klangwelt vollständig mit eigenen WAVs** — Erkenntnis aus 10716-Test: System-Töne fallen bei kurzen Aktionen (`playSubTaskDone` etc.) kaum hörbar aus. Soll Teil des KlangweltReview werden.
 - [ ] **Hauptaufgaben-Design** – Abstimmung Website-Darstellung mit App-Design
 
@@ -189,7 +189,7 @@ Zwei eng verzahnte Features für Neuanwender, die nach B-M2 (Build 10721) auf de
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
-- [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend)
+- [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
 - [ ] ElevenLabs Prompt-Länge testen (Tool generiert 10–20 % kürzer als spezifiziert → Prompts etwas länger ansetzen)
 
@@ -233,33 +233,30 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 
 ## Wochenplanung
 
-**Aktueller Stand (29.04.2026):**
-- v1.7.0 Build 10717 gepusht und getaggt
-- 10715 in TestFlight, passive 24h-Crash-Verifikation läuft
+**Aktueller Stand (02.05.2026 abends):**
+- v1.7.0 Builds 10718 + 10719 gepusht und getaggt
 - 14 von 108 Code-Review-Befunden erledigt
-- F12 als neuer Befund entdeckt
+- F11 verifiziert und widerlegt (Sound im Edit-Sheet hörbar) — Mini-Befund zu `.erledigteEntfernt`-Fallback an KlangweltReview/WAV-Review angehängt
+- F12 (`syncStatus()`-Lock) bleibt offener Befund für v1.7.1
+- Buildplan-Verschiebung: 10718 + 10719 wurden durch Settings-UI-Etappe und Reset-on-Activation für Präsentationsmodus belegt; ursprünglich für 10718–10721 geplante Etappen rutschen um zwei Buildnummern nach hinten
 
 **Vorschlag nächste Woche (in der Reihenfolge der Etappen):**
 
-1. **Begriffs-Glossar erarbeiten** (vor 10718). 15 Min Konzept-Arbeit, eindeutige Bezeichnungen festklopfen.
+1. **Build 10720 — Tote-Code-Etappe** (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3). Beifang: F1, F3, F8 — falls umfangsverträglich. Klein-mittlere Etappe.
 
-2. **Build 10718 — F11-Diagnose** (EditTaskView Cleanup-Sound). Klein, präzise, mit dem neuen Glossar gut adressierbar.
+2. **Build 10721 — Localization-Cleanup**. Mittlere Etappe.
 
-3. **Build 10719 — Tote-Code-Etappe** (C-S5, C-S16, C-S18, C-S22, C-S29; C-M3). Beifang: F1, F3, F8 — falls umfangsverträglich. Klein-mittlere Etappe.
+3. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
 
-4. **Build 10720 — Localization-Cleanup**. Mittlere Etappe.
-
-5. **Build 10721 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
-
-6. **TestFlight-Sammelupload** der Builds 10716–10721 als ein gemeinsamer Test, dann App Store-Submission.
+4. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
 
 **Optional zwischendurch (Wochenende):**
-- WAVs Cityflow + Horizont reviewen
+- WAVs Cityflow + Horizont reviewen (inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation)
 - System-Klangwelt-WAVs vorbereiten
 
 **Nach v1.7.0-Release:**
 - v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9, F12 — Plan-vs-Realität-Block
-- F12 (`syncStatus()` lockt fälschlicherweise) während 10717-Test entdeckt — Fix vermutlich einzeilig, aber Test-Aufwand spürbar; Kandidat für 10718 oder eigene Etappe
+- F12 (`syncStatus()` lockt fälschlicherweise) — Fix vermutlich einzeilig, aber Test-Aufwand spürbar
 - TemplatePaletteReview, KlangweltReview, Hauptaufgaben-Design
 - Strict Concurrency auf "Complete" als eigene Etappe
 
