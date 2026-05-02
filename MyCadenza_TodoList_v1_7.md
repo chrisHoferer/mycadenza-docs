@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 02.05.2026 abends · Builds 10718 + 10719 + 10720 + 10721 gepusht und getaggt · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen · Cleanup-Bestätigung-Latentbug seit v1.6.1 in 10721 mit-eliminiert
+> Stand: 02.05.2026 abends · **Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett, alle Release-Blocker gelöst** · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen · Cleanup-Bestätigung-Latentbug seit v1.6.1 in 10721 mit-eliminiert · B-M2 in 10722 final gelöst
 
 ---
 
@@ -46,7 +46,16 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 - [x] **Build 10719** — Reset on Activation für Präsentationsmodus inkl. Hilfetext mit Verlust-Hinweis. Commit `031de78`, Tag `v1.7.0-b10719`. Eingeschoben — die ursprünglich für 10719 geplante Tote-Code-Etappe rückt auf 10720.
 - [x] **Build 10720** — Tote-Code (C-S5/C-S16/C-S18/C-S22/C-S29 + C-M3) + F1/F3/F8-Beifang. Commit `9ad814c`, Tag `v1.7.0-b10720`. Diagnose-Phase mit Zwischen-Bericht vorab (Mapping aus Code, weil CodeReview-IDs ohne Detail-Beschreibung). Beifang aus dem Aufräumen: `private func deleteAllInstances(of:)` in `EditorView.swift` wurde durch die `.swipeActions`-Entfernung aufrufslos und ist mit entfernt. Vier Localization-Keys (`scheduleWithContext`-only) wurden von Xcode automatisch als `extractionState: stale` markiert — Cleanup gehört in 10721.
 - [x] **Build 10721** — Localization-Cleanup (stale-keys + dynamische Keys + hardcoded Strings). Commit `8bb38c6`, Tag `v1.7.0-b10721`. Diagnose-Phase mit Zwischen-Bericht vorab. Drei Kategorien: (C) 4 echt-stale aus `scheduleWithContext` entfernt + 4 falsch-stale auf `extractionState: manual` (DEBUG-only Keys), (A) 26 Stellen auf `String(format:)` migriert (~15 unique Format-Keys, fast alle existierten bereits in xcstrings mit EN), (B) `AppMode.swift` `"Praesentation"` → `"Präsentation"` mit Umlaut. Erfreulicher Beifang: latenter Bug seit v1.6.1 — der Cleanup-Bestätigungsdialog zeigte im DE den Source-Key `"Cleanup Bestätigung 2"` als Müll-Text statt der eigentlichen Message. Heute beim 10721-Test entdeckt; DE+EN sauber befüllt mit Plural-Format-Wortlaut, Singular-Holprigkeit pragmatisch akzeptiert (kein `(n)`-Hack).
-- [ ] **Build 10722** — Import-Sperre bei aktivem CloudKit-Sync (B-M2) — letzter v1.7.0-Release-Blocker
+- [x] **Build 10722** — Import-Sperre B-M2 + iCloud-Status-Architektur (Observer + Header-Anzeige + SettingsView-Section + Sperren-Mechanik). Commit `36c422d`, Tag `v1.7.0-b10722`. **B-M2 final gelöst — letzter v1.7.0-Release-Blocker.**
+  - Neue Klasse `CloudKitStatusObserver` (Singleton, `@MainActor`, `ObservableObject`) mit vier Mechanismen: UserDefaults-Marker, primär `eventChangedNotification`, sekundär `NSPersistentStoreRemoteChange` als Live-Signal, Timeouts (60s Initial, 5min Active-Sync). Initial-DB-Snapshot beim App-Start.
+  - Wiederverwendbare UI-Bausteine in `CloudKitStatusView.swift`: `CloudKitStatusDot`, Status-Text-Helper, Modal-Hinweis-Logik.
+  - **Header-Refactor in TodayView**: ProgressRingView von Hauptelement (40×40pt, rechts) zu Header-Element (32×32pt, links neben „Heute") verkleinert, immer sichtbar (auch bei 0/0). iCloud-Status-Bereich rechts neu angelegt mit Punkt + Mini-Text und Tap-zu-Settings-iCloud-Section (ScrollViewReader + `.id`-Anker, TabView-Selection-Binding in ContentView).
+  - **Wiederhersteller-Banner aus TodayView entfernt** — Status-Bereich rechts im Header übernimmt diese Information; bei `.initialContact` mit leerer DB pulsiert der Punkt blau mit „Verbindung…", ein Tap führt direkt zur Settings-iCloud-Section.
+  - Sperren-Mechanik: Daten-Export und beide Import-Modi `.disabled(!isImportAllowed)` während Sync, Section-Footer-Hinweistext. Duplikate-Bereinigen + Alle-Daten-zurücksetzen nicht gesperrt (kollidieren nicht mit Sync).
+  - Tagesbericht-Modal mit kontext-sensitivem Status-Hinweis-Block (gelb für Fehler, blau für Wiederhersteller, grau dezent sonst).
+  - 23 neue Localization-Keys DE+EN als `extractionState: manual`.
+  - **Test-Iteration:** Beim ersten Test State-Inkonsistenz Header ↔ Settings entdeckt — Ursache war `@StateObject` mit Singleton (Apple-Anti-Pattern) plus `@State`-basierte `.repeatForever()`-Animation, die bei Status-Wechsel nicht sauber stoppte. Fix: `@StateObject` raus, direkter `.environmentObject(.shared)`-Inject; `CloudKitStatusDot` auf `TimelineView(.animation)` umgebaut, `if shouldPulse { PulsingCircle } else { Circle }`-Pattern (Subview wird beim Status-Wechsel komplett ausgetauscht, kein lingering Animation-State).
+  - **Farbe** des Status-Punkts auf `Color(.systemGreen)` für `.synced` (Apple-System-Grün, hell und frisch). Der Fortschrittsring nutzt noch das alte matte Grün — das adressiert das spätere Design-Review.
 - [ ] **Build 10723** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
 - [ ] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
 - [ ] **Build 10725** — SoundManager preview-API (C-S42)
@@ -160,6 +169,7 @@ Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
 ### Reviews & Design
 
 - [ ] **TemplatePaletteReview** – Durchsicht der Template-Farbpalette
+- [ ] **App-weite Farbpalette-Konsistenz** (Vermerk aus 10722) — Beim 10722-Test wurde der `CloudKitStatusDot` auf `Color(.systemGreen)` umgestellt (hell, frisch, Apple-System-Standard). Der Fortschrittsring (`ProgressRingView`) zeigt aber noch das alte matte Grün (`Color.green`/Hex-Variante). Im Rahmen des Design-Reviews gemeinsam entscheiden, welche Grün-Töne app-weit Verwendung finden — Status-Indikatoren, Fortschrittsring, „erledigt"-Markierungen evtl. unterschiedlich. Heute bewusst nicht halbgar mitgeändert.
 - [ ] **KlangweltReview** – Durchsicht der vier Klangwelten. **Mini-Befund aus F11-Verifikation (02.05.2026):** `.erledigteEntfernt` fällt in einer Klangwelt auf `.teilaufgabeUebersprungen` zurück (Fallback in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Review identifizieren und schließen.
 - [ ] **System-Klangwelt vollständig mit eigenen WAVs** — Erkenntnis aus 10716-Test: System-Töne fallen bei kurzen Aktionen (`playSubTaskDone` etc.) kaum hörbar aus. Soll Teil des KlangweltReview werden.
 - [ ] **Hauptaufgaben-Design** – Abstimmung Website-Darstellung mit App-Design
@@ -168,7 +178,7 @@ Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
 
 Konzept-Dokument: `MyCadenza_FeatureKonzepte_v1_7_x.md`
 
-Zwei eng verzahnte Features für Neuanwender, die nach B-M2 (Build 10721) auf der dort entwickelten Sync-Erkennungs-Logik aufsetzen:
+Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) entwickelten Sync-Erkennungs-Logik aufsetzen — `CloudKitStatusObserver` mit Initial-DB-Snapshot lässt sich für Erst-Start-Erkennung wiederverwenden:
 
 * **Default-Kategorien** — Vier Kategorien (Haushalt, Arbeit, Family & Friends, Gesundheit) werden beim Erst-Start auf leerer DB angelegt, jede mit eigener Klangwelt, Farbe und Icon. Sync-aware (CloudKit-Initial-Sync abwarten). Bestandsschutz für Nutzer von v1.6.1 oder früher.
 * **Mustertemplate „MyCadenza einrichten"** — Lern-Container mit sechs Teilaufgaben, kategorisiert als „Haushalt" (Klangwelt Morgenwald), `doesNotExpire = true`, mit `isSampleData`-Marker für saubere Update-Logik. Beim Onboarding-Ende wird zusätzlich automatisch eine konkrete Aufgabe aus diesem Template generiert (Startzeit „jetzt", ohne Verfall, ohne Marker — normale User-Aufgabe). Visuell dezent als Onboarding-Begleiter markiert.
@@ -238,20 +248,22 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 ## Wochenplanung
 
 **Aktueller Stand (02.05.2026 abends):**
-- v1.7.0 Builds 10718 + 10719 + 10720 + 10721 gepusht und getaggt — vier Builds an einem Tag, alle einzeln getestet
-- ~17 von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720, plus die schon vorhandenen 14). Localization-Cluster ist in 10721 als Cluster (ohne eigene C-IDs) aufgelöst.
+- **v1.7.0 funktional komplett — alle Release-Blocker gelöst.** Builds 10718 + 10719 + 10720 + 10721 + 10722 gepusht und getaggt — fünf Code-Builds an einem Tag, alle einzeln getestet, alle einzeln rollback-fähig.
+- 18+ von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720 + B-M2 in 10722, plus die schon vorhandenen 14). Localization-Cluster in 10721 als Cluster aufgelöst.
+- B-M2 (Import-Sperre bei aktivem CloudKit-Sync) ist final gelöst — substantielle Erweiterung gegenüber dem ursprünglichen Konzept zu einer vollen iCloud-Status-Architektur (Observer + UI-Anzeigen + Sperren-Mechanik). Wiederhersteller-Fall transparent für den Nutzer.
 - F1, F3, F8 erledigt (in Build 10720 mitgelöst)
 - F11 verifiziert und widerlegt (Sound im Edit-Sheet hörbar) — Mini-Befund zu `.erledigteEntfernt`-Fallback an KlangweltReview/WAV-Review angehängt
 - F12 (`syncStatus()`-Lock) bleibt offener Befund für v1.7.1
 - F13 + F14 als neue UX-Findings v1.7.1 aufgenommen (beim 10720-Test entdeckt)
 - Latentbug seit v1.6.1 (Cleanup-Bestätigung zeigte Source-Key statt Übersetzung) in 10721 mit-eliminiert
-- **Nächste Etappe ist Build 10722 (Import-Sperre B-M2) — letzter v1.7.0-Release-Blocker**
+- Plural-Variations + App-weite Farbpalette-Konsistenz als Folge-Items im C-Pool
 
-**Vorschlag nächste Woche (in der Reihenfolge der Etappen):**
+**Nächste Schritte sind keine Builds mehr, sondern Release-Vorbereitung:**
 
-1. **Build 10722 — Import-Sperre B-M2**. Mittlere Etappe. **Letzter v1.7.0-Release-Blocker.**
-
-2. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test, dann App Store-Submission.
+1. **WhatsNewView-Inhalt für v1.7.0** — Feature-Liste in `OnboardingView.swift` aktualisieren (Demo & Präsentation für Endnutzer, „Was ist neu"-Button, iCloud-Status-Anzeige, Cleanup-Verbesserungen).
+2. **CHANGELOG-Pflege** — alle fünf heutigen Builds plus die vorherigen v1.7.0-Builds dokumentieren.
+3. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test.
+4. **App-Store-Submission** nach erfolgreichem TestFlight-Test.
 
 **Optional zwischendurch (Wochenende):**
 - WAVs Cityflow + Horizont reviewen (inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation)

@@ -545,6 +545,8 @@ Klangwelt-Zuweisung erfolgt über die Kategorie (`TaskCategory.soundWorldRaw`). 
 | SubTask-Cleanup-Logik inline in Views weicht voneinander ab | Nur `MainTask.cleanupCompletedSubTasks` / `resetAllSubTasks` aufrufen |
 | Status-Wechsel inline in Views ohne Sound/Scheduler | Nur `MainTask.performMarkOpen/Done/Skipped` aufrufen |
 | MusicKit funktioniert nicht im Simulator | Auf echtem Gerät testen |
+| `@StateObject` mit `.shared`-Singleton bricht Subscription-Propagation in TabView-Subtrees (entdeckt in 10722) | Singletons direkt via `.environmentObject(.shared)` injizieren — kein `@StateObject`-Wrapper |
+| `@State` + `.repeatForever()`-Animation bleibt bei Status-Wechsel hängen, weil der Animation-Cycle noch läuft (entdeckt in 10722) | `TimelineView(.animation)` für zeit-getriebene Pulsation; per `if condition { PulsingView } else { StaticView }` Subview-Austausch erzwingen, statt `@State`-Toggle |
 
 ---
 
