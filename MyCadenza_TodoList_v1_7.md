@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 03.05.2026 · Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett · CLAUDE.md auf Mini-Version reduziert · SwiftUI-Konventionen als TODO für v1.7.1 aufgenommen
+> Stand: 03.05.2026 · Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett · CLAUDE.md auf Mini-Version reduziert · SwiftUI-Konventionen als TODO für v1.7.1 aufgenommen · Build 10723 in v1.7.1 verschoben
 
 ---
 
@@ -56,7 +56,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
   - 23 neue Localization-Keys DE+EN als `extractionState: manual`.
   - **Test-Iteration:** Beim ersten Test State-Inkonsistenz Header ↔ Settings entdeckt — Ursache war `@StateObject` mit Singleton (Apple-Anti-Pattern) plus `@State`-basierte `.repeatForever()`-Animation, die bei Status-Wechsel nicht sauber stoppte. Fix: `@StateObject` raus, direkter `.environmentObject(.shared)`-Inject; `CloudKitStatusDot` auf `TimelineView(.animation)` umgebaut, `if shouldPulse { PulsingCircle } else { Circle }`-Pattern (Subview wird beim Status-Wechsel komplett ausgetauscht, kein lingering Animation-State).
   - **Farbe** des Status-Punkts auf `Color(.systemGreen)` für `.synced` (Apple-System-Grün, hell und frisch). Der Fortschrittsring nutzt noch das alte matte Grün — das adressiert das spätere Design-Review.
-- [ ] **Build 10723** — Sound-Kaskaden (B-S2, abhängig von Klangwelten-Entscheidung)
+- [↗] **Build 10723** — Sound-Kaskaden (B-S2) → **verschoben nach v1.7.1, neue Buildnummer 10726**. Begründung: hängt von KlangweltReview-Entscheidung ab, heute nicht als reine Ausführungs-Etappe lösbar.
 - [ ] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
 - [ ] **Build 10725** — SoundManager preview-API (C-S42)
 
@@ -216,6 +216,7 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
+- [ ] **Build 10726** — Sound-Kaskaden (B-S2, ursprünglich als 10723 geplant, am 03.05.2026 verschoben). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
 - [ ] ElevenLabs Prompt-Länge testen (Tool generiert 10–20 % kürzer als spezifiziert → Prompts etwas länger ansetzen)
