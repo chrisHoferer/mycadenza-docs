@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 03.05.2026 · Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett · CLAUDE.md auf Mini-Version reduziert · SwiftUI-Konventionen als TODO für v1.7.1 aufgenommen · Build 10723 in v1.7.1 verschoben
+> Stand: 03.05.2026 · Builds 10718–10725 gepusht und getaggt — v1.7.0 Code-Etappen abgeschlossen · WhatsNewView-Update als Build 10726 geplant (letzter v1.7.0-Schritt vor App-Store-Submission) · F15 aufgenommen · Sound-Kaskaden in v1.7.1 von 10726 auf 10727 verschoben
 
 ---
 
@@ -56,9 +56,10 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
   - 23 neue Localization-Keys DE+EN als `extractionState: manual`.
   - **Test-Iteration:** Beim ersten Test State-Inkonsistenz Header ↔ Settings entdeckt — Ursache war `@StateObject` mit Singleton (Apple-Anti-Pattern) plus `@State`-basierte `.repeatForever()`-Animation, die bei Status-Wechsel nicht sauber stoppte. Fix: `@StateObject` raus, direkter `.environmentObject(.shared)`-Inject; `CloudKitStatusDot` auf `TimelineView(.animation)` umgebaut, `if shouldPulse { PulsingCircle } else { Circle }`-Pattern (Subview wird beim Status-Wechsel komplett ausgetauscht, kein lingering Animation-State).
   - **Farbe** des Status-Punkts auf `Color(.systemGreen)` für `.synced` (Apple-System-Grün, hell und frisch). Der Fortschrittsring nutzt noch das alte matte Grün — das adressiert das spätere Design-Review.
-- [↗] **Build 10723** — Sound-Kaskaden (B-S2) → **verschoben nach v1.7.1, neue Buildnummer 10726**. Begründung: hängt von KlangweltReview-Entscheidung ab, heute nicht als reine Ausführungs-Etappe lösbar.
+- [↗] **Build 10723** — Sound-Kaskaden (B-S2) → **verschoben nach v1.7.1, neue Buildnummer 10727**. Begründung: hängt von KlangweltReview-Entscheidung ab, heute nicht als reine Ausführungs-Etappe lösbar.
 - [ ] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46)
-- [ ] **Build 10725** — SoundManager preview-API (C-S42)
+- [x] **Build 10725** — SoundManager preview-API (C-S42) + tagKomplett-Doppelton-Duplikat eliminiert (C-A45 Beifang) + CHANGELOG-Sweep. Commit `d196ea2`, Tag `v1.7.0-b10725`. Drei Stränge in atomic commit: (1) `SoundManager.preview(action:world:volume:)` neu, übergeht `isEnabled` und Haptic, volume explizit; SoundtestView delegiert komplett, eigener `audioPlayer`-State entfernt. (2) Doppelton-Duplikat zwischen SoundManager und SoundtestView durch Delegation aufgelöst. (3) CHANGELOG.md im App-Repo nachgepflegt: 10717-Eintrag korrigiert (war fälschlich „F3 SubTask-Sheet dismiss", korrekt ist C-S38/C-S39/F10 vom 29.04.), Builds 10718–10725 chronologisch nachgetragen. Test-Befund F15 entdeckt (siehe v1.7.1-Block).
+- [ ] **Build 10726** — WhatsNewView-Inhalt für v1.7.0 + Layout-Update (Option C). Vier thematische Features: iCloud-Status auf einen Blick · Frischer Heute-Bildschirm · Demo & Präsentation für alle · Neuerungen jederzeit nachlesen. Layout-Wechsel: Versions-Info wandert vom Header in einen visuell umrahmten Block mit Gold-Tint und Caption-Überschrift „Neu in Version 1.7.0". Schluss-Satz „Stabilitäts- und Detailverbesserungen unter der Haube" vor dem Button. Letzter Code-Schritt vor App-Store-Submission v1.7.0.
 
 ### Offene Code-Quality-Items
 
@@ -135,6 +136,10 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
   Beim 10720-Test beobachtet: Nach Tap auf „Aufgabe hinzufügen" dauert es spürbar, bis das erste Textfeld den Fokus annimmt und die Tastatur erscheint. Ursache offen.
   **Lade-Profil zu prüfen:** Defaults-Berechnung beim View-Init (Standard-Gültigkeitsdauer, Verfallfrist, Standard-Wiederholung), Sheet-Animation und FocusState-Timing, mögliche iCloud-Sync-Side-Effects beim Anlegen einer neuen `MainTask`-Instanz, Kategorie-Liste-Fetch.
   v1.7.1.
+
+- [ ] **F15 · Lautstärke-Differenzierung der drei Stufen zu schwach**
+  Beim 10725-Test entdeckt (03.05.2026). Aktuelle Werte `quiet=0.3 / normal=0.6 / loud=1.0` sind linear gestuft, Lautstärke-Wahrnehmung ist aber logarithmisch — der Unterschied zwischen Leise und Normal fühlt sich kleiner an als zwischen Normal und Laut. Bei kurzen Tönen (0,5-Sek-Klicks) ist die Differenz besonders schwer wahrnehmbar.
+  **Lösungsansatz:** Spreizung wie `0.15 / 0.5 / 1.0` erwägen (logarithmischer). Plus: bei System-Klangwelt ist der Volume-Picker technisch wirkungslos, weil `AudioServicesPlayAlertSound` die Volume-Property ignoriert — UI-Hinweis im Footer der System-Klangwelt sinnvoll. Datei: `SoundManager.swift` Z. 171-177 (`SoundVolume.volumeLevel`), plus `SoundtestView` für den Footer-Hinweis.
 
 ### Methodische TODOs vor Diagnose-Etappen
 
@@ -216,7 +221,7 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
-- [ ] **Build 10726** — Sound-Kaskaden (B-S2, ursprünglich als 10723 geplant, am 03.05.2026 verschoben). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
+- [ ] **Build 10727** — Sound-Kaskaden (B-S2, ursprünglich als 10723 geplant, am 03.05.2026 verschoben). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
 - [ ] ElevenLabs Prompt-Länge testen (Tool generiert 10–20 % kürzer als spezifiziert → Prompts etwas länger ansetzen)
