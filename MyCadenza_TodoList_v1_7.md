@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 02.05.2026 abends · **Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett, alle Release-Blocker gelöst** · F1/F3/F8 in 10720 mitgelöst · F13 + F14 als neue UX-Findings v1.7.1 aufgenommen · Cleanup-Bestätigung-Latentbug seit v1.6.1 in 10721 mit-eliminiert · B-M2 in 10722 final gelöst
+> Stand: 03.05.2026 · Builds 10718–10722 gepusht und getaggt — v1.7.0 funktional komplett · CLAUDE.md auf Mini-Version reduziert · SwiftUI-Konventionen als TODO für v1.7.1 aufgenommen
 
 ---
 
@@ -173,6 +173,22 @@ Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
 - [ ] **KlangweltReview** – Durchsicht der vier Klangwelten. **Mini-Befund aus F11-Verifikation (02.05.2026):** `.erledigteEntfernt` fällt in einer Klangwelt auf `.teilaufgabeUebersprungen` zurück (Fallback in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Review identifizieren und schließen.
 - [ ] **System-Klangwelt vollständig mit eigenen WAVs** — Erkenntnis aus 10716-Test: System-Töne fallen bei kurzen Aktionen (`playSubTaskDone` etc.) kaum hörbar aus. Soll Teil des KlangweltReview werden.
 - [ ] **Hauptaufgaben-Design** – Abstimmung Website-Darstellung mit App-Design
+
+### Doku-Pflege
+
+- [ ] **SwiftUI-Konventionen-Sammlung in `Cadenza_Projektstruktur.md` ergänzen**
+  Bei Reduktion der `CLAUDE.md` am 03.05.2026 (App-Repo, Commit `0e56098`)
+  sind technische Fallstricke ohne dokumentierte Heimat sichtbar geworden.
+  In den vorhandenen „Bekannte Fallstricke"-Abschnitt der Projektstruktur
+  übernehmen:
+  - `.swipeActions` + `.editMode(.constant(.active))` inkompatibel
+  - `.navigationTitle` Large-Title-Verhalten
+  - `Button` in Section Header benötigt `.buttonStyle(.plain)`
+  - `Spacer()` in Buttons benötigt `.contentShape(Rectangle())` für
+    klickbaren Gesamtbereich
+  - Audio Session `.ambient` als gewählte Kategorie für Klangwelten
+  - weitere Konventionen, die beim Lesen sichtbar werden
+  Klein, kombinierbar mit der nächsten Doku-Pflege-Welle.
 
 ### Onboarding-Verfeinerung (v1.7.x)
 
