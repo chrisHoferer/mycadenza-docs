@@ -1,4 +1,14 @@
-# MyCadenza – Code Review v1.7.0
+# MyCadenza – Code Review v1.7.0 (abgeschlossen)
+
+> **Status: Abgeschlossen mit v1.7.0 vom 03.05.2026** (Apple-Einreichung). Dieses Review wurde während der v1.7.0-Welle (Builds 10707–10722) zur strukturierten Befund-Verfolgung geführt. Mit Auslieferung von v1.7.0 ist die Befund-Sammlung abgeschlossen.
+>
+> **Offene Befunde** aus diesem Review sind in [`MyCadenza_TodoList_v1_7.md`](MyCadenza_TodoList_v1_7.md) (Block B v1.7.1) und in [`MyCadenza_Roadmap_v1_7_1_bis_v2_x.md`](MyCadenza_Roadmap_v1_7_1_bis_v2_x.md) weitergetragen.
+>
+> Dieses Dokument bleibt als **Befund-ID-Referenz** im Repo (für Commit-Messages, die auf `A-S1`, `B-M2`, `C-S37` etc. verweisen), wird aber nicht mehr fortgeschrieben.
+>
+> Die ursprünglichen Stand-Angaben unten bleiben als historischer Beleg unverändert.
+
+---
 
 > Lebendiges Review-Dokument für den strukturierten Code-Review-Prozess.
 > Stand: 25.04.2026 · v1.6.1 im App Store · Build 10716 gepusht · TaskScheduler `@MainActor` (10715) + SubTask-Operations konsolidiert (10716)

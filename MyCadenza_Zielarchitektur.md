@@ -1,4 +1,18 @@
-# MyCadenza – Zielarchitektur
+# MyCadenza – Zielarchitektur (eingefroren)
+
+> **Status: Eingefroren am 25.04.2026.** Strategischer Bezugsrahmen für die v1.7.0-Welle. **Abgelöst durch** [`MyCadenza_Roadmap_v1_7_1_bis_v2_x.md`](MyCadenza_Roadmap_v1_7_1_bis_v2_x.md) vom 03.05.2026.
+>
+> Dieses Dokument beschreibt die strategische Ausrichtung **vor** dem Pro-Plan-/Vapor-Server-Pivot der Roadmap-Sitzung am 03.05.2026. Es bleibt im Repo als historische Referenz für die v1.7.0-Phase, wird aber nicht mehr fortgeschrieben.
+>
+> **Wesentliche überholte Kernaussagen** (für eine schnelle Orientierung beim Lesen):
+> - „MyCadenza ist und bleibt ein persönlicher Tagesplaner. Solo-Nutzung." → Pro-Plan in Phase 7 der Roadmap impliziert Multi-User-Geschäftsmodell.
+> - „MCP-Server als zentrales Phase-1-Ziel" → durch Vapor-Server in Phase 4b der Roadmap ersetzt.
+> - „Kein Server-Backend geplant für die App selbst" → durch Phase 4b der Roadmap explizit umgekehrt.
+> - „Bewusste Nicht-Ziele: Kein Multi-User-Support" → mit Pro-Plan obsolet.
+>
+> Die ursprünglichen Stand-Angaben unten bleiben als historischer Beleg unverändert.
+
+---
 
 > Entwicklungs- und Architekturplan für MyCadenza.
 > Stand: 25.04.2026 · v1.6.1 im App Store · Build 10716 in Entwicklung gepusht · TestFlight-BG-Crash gelöst (10715), SubTask-Operations konsolidiert (10716)

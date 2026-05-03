@@ -1,7 +1,7 @@
 # MyCadenza – Funktionsübersicht
 
 > Dokumentation der App-Funktionsweise für den Entwickler.
-> Stand: 02.05.2026 · v1.7.0
+> Stand: 03.05.2026 · v1.7.0 zur Apple-Prüfung eingereicht
 
 ---
 
@@ -35,7 +35,9 @@ Jede Sektion zeigt ihre Aufgaben nach Kategorien gruppiert. Jede Kategorie ist e
 - Tap auf eine Teilaufgabe → Teilaufgaben-Fenster öffnen
 - Status-Icon rechts (Kreis/Haken/Pfeil) → Menu mit Status-Optionen
 
-**Fortschrittsring:** Oben rechts neben dem Datum zeigt ein grüner Ring den Tagesfortschritt (erledigte/gesamte Aufgaben).
+**Fortschrittsring:** Links neben der „Heute"-Überschrift zeigt ein grüner Ring den Tagesfortschritt (erledigte/gesamte Aufgaben). 32×32 pt, immer sichtbar — auch wenn noch keine Aufgaben für heute vorliegen.
+
+**iCloud-Status-Indikator:** Rechts vom Header-Text zeigt ein farbiger Punkt den aktuellen Sync-Status. Bei Bedarf erscheint ein dezenter Mini-Text neben dem Punkt (z. B. „Verbindung…", „Fehler", „Lokal"). Im Synchronstand bleibt nur der Punkt — bewusst zurückhaltend. Tap führt direkt zur iCloud-Sektion in den Einstellungen.
 
 **Musik-Leiste:** Bei aktiver Musikwiedergabe erscheint eine kompakte Player-Leiste mit Track-Info, Play/Pause und AirPlay/Bluetooth-Picker.
 
@@ -261,6 +263,20 @@ Für UI-Elemente der App selbst (nicht für Aufgaben):
 
 Alle Daten werden automatisch über iCloud synchronisiert. Änderungen auf einem Gerät erscheinen auf allen Geräten mit derselben Apple ID.
 
+**Sync-Status-System (Build 10722):** Die App erkennt fünf Zustände der iCloud-Verbindung:
+
+| Zustand | Bedeutung | Anzeige |
+|---|---|---|
+| `initialContact` | Erstkontakt mit iCloud nach App-Start, Datenstand wird geprüft | Blau pulsierend, Text „Verbindung…" |
+| `syncing` | Aktiver Sync läuft | Blau, Text „Sync läuft" |
+| `synced` | Daten synchron | Grün, kein Text |
+| `failed` | Sync-Fehler aufgetreten | Gelb, Text „Fehler" |
+| `localOnly` | iCloud nicht verfügbar oder kein Apple-Account | Grau, Text „Lokal" |
+
+Der Status wird im Heute-Header als Punkt mit optionalem Mini-Text angezeigt (siehe §2.1) und in den Einstellungen als eigene Sektion mit Detailinformationen. Tap auf den Header-Indikator führt direkt zur Detail-Sektion in den Einstellungen.
+
+Bei leerer Datenbank und aktivem Erstkontakt wird der Wiederhersteller-Hinweis kontextsensitiv direkt im Status-Bereich gezeigt — kein eigenes Banner mehr in der Heute-Liste.
+
 **Duplikat-Bereinigung:** Nach jedem Sync prüft die App auf Duplikate (gleiche Aufgabe am gleichen Tag) und entfernt diese automatisch.
 
 ### 8.2 Export/Import
@@ -270,6 +286,8 @@ Alle Daten werden automatisch über iCloud synchronisiert. Änderungen auf einem
 **Import:** Liest eine JSON-Export-Datei ein. Zwei Modi:
 - **Ersetzen:** Löscht alle bestehenden Daten und ersetzt sie
 - **Zusammenführen:** Fügt importierte Daten hinzu, bestehende Kategorien werden aktualisiert
+
+**Sperren während aktivem iCloud-Sync (Build 10722):** Während eine Synchronisation läuft (`syncing` oder `initialContact`), sind Export und beide Import-Modi deaktiviert. Ein Section-Footer-Hinweis erklärt den Grund („iCloud-Sync aktiv, bitte später erneut versuchen"). Duplikate-Bereinigen und Alle-Daten-zurücksetzen bleiben verfügbar — sie kollidieren nicht mit dem Sync.
 
 ### 8.3 Hintergrund-Verarbeitung
 

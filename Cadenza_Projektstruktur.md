@@ -1,8 +1,8 @@
 # MyCadenza – Projektstruktur & Referenz
 
 > Dieses Dokument dient als Claude-Referenz für neue Sessions.
-> Stand: 02.05.2026
-> App Store: v1.6.1 (Build 10602) · In Entwicklung: v1.7.0 (Build 10719)
+> Stand: 03.05.2026
+> App Store: v1.6.1 (Build 10602) · v1.7.0 (Build 10722) zur Apple-Prüfung eingereicht
 
 ---
 
@@ -47,6 +47,7 @@ Nutzer verwalten wiederkehrende Aufgaben mit Teilaufgaben, Kategorien und Klang-
 |---|---|---|
 | `ExpandableComponents.swift` | `SectionHeaderView`, `UnifiedCategoryHeader`, `DateGroupHeader`, `UnifiedSubTaskBadge`, `WeekHeaderView`, `DayHeaderView` | Einheitliche aufklappbare Header-Komponenten für alle Views |
 | `PaletteColorPicker.swift` | `PaletteColorPicker`, `PaletteColorPreview` | Kuratierter Farbpicker mit 9×5 Farben, Light/Dark-Mode-fähig |
+| `CloudKitStatusView.swift` | `CloudKitStatusDot`, Status-Text-Helper, Modal-Hinweis-Logik | Wiederverwendbare UI-Bausteine für den iCloud-Status-Indikator im Header und in der Einstellungen-Sektion (Build 10722) |
 
 ### Datenmodell
 
@@ -74,6 +75,7 @@ Nutzer verwalten wiederkehrende Aufgaben mit Teilaufgaben, Kategorien und Klang-
 | `SoundManager.swift` | `SoundWorld` (enum, 5 Welten), `SoundAction` (enum, 17 Aktionen), `SoundVolume` (enum), `SoundManager` (singleton) | Klang-System: 5 Klangwelten × 17 Aktionen, AVAudioPlayer, Haptik. Klangwelten-Redesign nach v1.7.2 geplant. |
 | `AppPalette.swift` | `AppPalette`, `PaletteStop`, `PaletteFamily`, `Color` Extension | Farbsystem: 9 Familien × 5 Stufen, Gold-Chrome, Light/Dark-Auflösung, Hex-Konvertierung |
 | `CadenzaExportImport.swift` | `CadenzaExport`, Export-Structs, `CadenzaDataExporter`, `CadenzaDataImporter`, `ImportError` | JSON-Export/Import des gesamten Datenbestands; CloudKit-Zwischen-Saves beim Replace-Import |
+| `CloudKitStatusObserver.swift` | `CloudKitStatusObserver` (Singleton, `@MainActor`, `ObservableObject`) | Erkennt iCloud-Sync-Aktivität über vier Mechanismen: UserDefaults-Marker, primär `eventChangedNotification`, sekundär `NSPersistentStoreRemoteChange` als Live-Signal, Timeouts (60 s Initial, 5 min Active-Sync); Initial-DB-Snapshot beim App-Start (Build 10722) |
 
 ### Helper & Extensions
 
@@ -564,7 +566,7 @@ Im DEBUG-Build sichtbare Hilfen, gebündelt in der „Entwicklung"-Sektion der `
 ## 9. Aktueller Stand
 
 - **App Store:** v1.6.1 (Build 10602)
-- **In Entwicklung:** v1.7.0 (Build 10719)
+- **Bei Apple zur Prüfung:** v1.7.0 (Build 10722)
 
 ### Implementiert in v1.7.0
 
@@ -590,6 +592,14 @@ Im DEBUG-Build sichtbare Hilfen, gebündelt in der „Entwicklung"-Sektion der `
 - ✅ SoundTestView als DEBUG-Testbench für alle Aktionen × Klangwelten
 - ✅ Farbpalette mit 9×5 kuratierten Farben + Light/Dark
 - ✅ Datenschutzrichtlinie + Support-Kontakt verlinkt (live seit 21.04.2026)
+- ✅ Tote-Code-Bereinigung in Views und xcstrings (Build 10720)
+- ✅ Localization-Cleanup: stale-keys entfernt, dynamische Keys auf `String(format:)` migriert, „Praesentation" → „Präsentation" (Build 10721)
+- ✅ Latentbug seit v1.6.1 in Cleanup-Bestätigung beim selben Build mit-eliminiert
+- ✅ CloudKit-Status-System mit fünf Zuständen (`initialContact`/`syncing`/`synced`/`failed`/`localOnly`), Header-Punkt mit konditionalem Mini-Text, eigene Sektion in den Einstellungen (Build 10722)
+- ✅ Header-Refactor in TodayView: ProgressRing 32×32 pt links neben „Heute", iCloud-Status rechts, immer sichtbar (Build 10722)
+- ✅ Wiederhersteller-Banner aus TodayView entfernt — Status-Bereich übernimmt diese Information bei `initialContact` mit leerer DB (Build 10722)
+- ✅ Import-/Export-Sperre während aktivem iCloud-Sync, mit Section-Footer-Hinweis (B-M2, letzter v1.7.0-Release-Blocker, Build 10722)
+- ✅ Tagesbericht-Modal mit kontext-sensitivem Status-Hinweis-Block (Build 10722)
 
 ### Geplant
 
