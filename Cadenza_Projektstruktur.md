@@ -1,8 +1,8 @@
 # MyCadenza – Projektstruktur & Referenz
 
 > Dieses Dokument dient als Claude-Referenz für neue Sessions.
-> Stand: 03.05.2026
-> App Store: v1.6.1 (Build 10602) · v1.7.0 (Build 10722) zur Apple-Prüfung eingereicht
+> Stand: 04.05.2026
+> App Store: v1.7.0 (Build 10726) seit 04.05.2026 live · v1.6.1 (Build 10602) abgelöst
 
 ---
 
@@ -565,8 +565,7 @@ Im DEBUG-Build sichtbare Hilfen, gebündelt in der „Entwicklung"-Sektion der `
 
 ## 9. Aktueller Stand
 
-- **App Store:** v1.6.1 (Build 10602)
-- **Bei Apple zur Prüfung:** v1.7.0 (Build 10722)
+- **App Store:** v1.7.0 (Build 10726) seit 04.05.2026 live · v1.6.1 (Build 10602) abgelöst
 
 ### Implementiert in v1.7.0
 
@@ -610,7 +609,6 @@ Detaillierter Sprint-Plan und Befund-IDs:
 
 Offene größere Themen außerhalb der laufenden Sprint-Etappen:
 
-- ⬜ v1.7.0-Release-Blocker B-M2 (Import-Sperre bei aktivem CloudKit-Sync)
 - ⬜ Klangwelten-Redesign (nach v1.7.2)
 - ⬜ `defaultValidityDuration`/`defaultRepeatInterval` AppStorage in `AddTaskView` ankoppeln
 - ⬜ In-App Sprachauswahl (statt iOS Settings Redirect)

@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 03.05.2026 · Builds 10718–10725 gepusht und getaggt — v1.7.0 Code-Etappen abgeschlossen · WhatsNewView-Update als Build 10726 geplant (letzter v1.7.0-Schritt vor App-Store-Submission) · F15 aufgenommen · Sound-Kaskaden in v1.7.1 von 10726 auf 10727 verschoben
+> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · Build 10727 wird erster v1.7.1-Build (Sound-Kaskaden)
 
 ---
 
@@ -16,7 +16,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 | **C) Feature Pool Zukunft** | Noch nicht geplante Features | Ideen & Backlog |
 | **D) Website** | Anwender-Dokumentation | Schicht 3 + 4 |
 
-> **Hinweis zur Release-Strategie:** Builds 10713–10724 wurden ursprünglich teilweise als v1.7.1 geplant. Da v1.7.0 noch nicht released ist, laufen sie alle in den v1.7.0-Train. Die formale Trennung v1.7.0/v1.7.1 startet erst nach App-Store-Release.
+> **Hinweis zur Release-Strategie:** Builds 10713–10726 sind in v1.7.0 gelandet (App Store Release am 04.05.2026 mit Build 10726). Ab Build 10727 beginnt formal der v1.7.1-Train, beginnend mit den Sound-Kaskaden.
 
 ---
 
@@ -122,15 +122,17 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
 
 - [x] **F11 · `playCompletedRemoved`/`playTaskReset` möglicherweise nicht hörbar in EditTaskView** — verifiziert 02.05.2026, Bug nicht reproduzierbar. Sound im Edit-Sheet ist hörbar, F11 widerlegt. **Mini-Befund (an WAV-Review/KlangweltReview angehängt):** `.erledigteEntfernt` fällt in einer Klangwelt offenbar auf `.teilaufgabeUebersprungen` zurück (Fallback-Mechanik in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Klangwelten-Review prüfen.
 
-- [ ] **F12 · `syncStatus()` lockt fälschlicherweise**
+- [x] **F12 · `syncStatus()` lockt fälschlicherweise**
   Beim 10717-Test entdeckt: Wenn alle Teilaufgaben einer Hauptaufgabe auf `done` (oder `skipped`) gesetzt werden, propagiert `syncStatus()` den abgeleiteten Status korrekt auf die Hauptaufgabe — setzt aber zusätzlich `isManualStatus = true`. Folge: Wenn der Nutzer anschließend die Teilaufgaben wieder auf `open` setzt, ignoriert `syncStatus()` die Änderung, weil die Hauptaufgabe gelockt ist. Die Hauptaufgabe bleibt auf `done` hängen.
   **Korrekt wäre:** `syncStatus()` darf das Lock-Flag NIE setzen — Locking ist ausschließlich Sache der `mark*(manually:)`-Methoden und `applyExpiry()`. Fix vermutlich einzeilig in `Models.swift`, aber Test-Aufwand: alle Status-Wechsel-Pfade neu durchspielen (Teilaufgaben → Hauptaufgabe und zurück, mit/ohne Lock).
   Kandidat für 10718 oder eigene Etappe; thematisch verwandt mit B1 (Historie als Protokoll) und F4 (markOpen lässt Folge-Instanz bestehen) — Plan-vs-Realität-Block.
+  **Verifiziert 04.05.2026, im Code widerlegt:** `syncStatus()` schreibt nur `statusRaw` und `lastExecutedDate`, fasst `isManualStatus` nie an. Globale Suche ergab: `isManualStatus` wird ausschließlich im `init`, im privaten `setStatus(_:manually:)`-Helper und in `cleanupCompletedSubTasks` (auf `false`) geschrieben. Keine versteckte Lock-Stelle. Vermutlich implizit mit-gelöst durch die `setStatus(_:manually:)`-Helper-Einführung in Build 10711.
 
-- [ ] **F13 · Reset einer Teilaufgabe auf `.open` lässt Hauptaufgaben-Status auf `.done` stehen**
+- [x] **F13 · Reset einer Teilaufgabe auf `.open` lässt Hauptaufgaben-Status auf `.done` stehen**
   Beim 10720-Test reproduziert: Aufgabe ohne Teilaufgaben angelegt, Teilaufgabe nachträglich hinzugefügt, Teilaufgabe als erledigt markiert (Hauptaufgabe wurde automatisch mitskaliert auf `.done` und in Abgeschlossen verschoben), Teilaufgabe wieder auf `.open` zurückgesetzt — Hauptaufgabe blieb aber auf `.done`.
   **Vermutete Ursache:** `syncStatus()` läuft nicht beim Wechsel einer einzelnen Teilaufgabe, oder `isManualStatus` blockiert (siehe F12 — vermutlich derselbe Lock-Mechanismus, der bei Teilaufgaben-Änderung greift).
   v1.7.1. Sehr wahrscheinlich gleicher Fix-Pfad wie F12.
+  **Verifiziert 04.05.2026 live in der App-Store-Version:** Aufgabe ohne Teilaufgaben angelegt (in EditorView), Teilaufgabe nachträglich im SubTaskSheet hinzugefügt, in TodayView als erledigt markiert → Hauptaufgabe sprang korrekt auf `.done` und wanderte in Abgeschlossen. Teilaufgabe wieder auf `.open` zurückgesetzt → Hauptaufgabe sprang ebenfalls auf `.open` zurück und erschien wieder unter „Anstehend" (Beginnzeit noch nicht erreicht). Reset-Pfad funktioniert sauber. Keine Code-Änderung nötig.
 
 - [ ] **F14 · `AddTaskView` braucht spürbar lang, bis das Textfeld fokussierbar ist**
   Beim 10720-Test beobachtet: Nach Tap auf „Aufgabe hinzufügen" dauert es spürbar, bis das erste Textfeld den Fokus annimmt und die Tastatur erscheint. Ursache offen.
