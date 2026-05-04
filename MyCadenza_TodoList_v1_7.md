@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 MusicPlayerView-Konsolidierung (vormals 10724), 10729 Sound-Kaskaden (vormals 10727, wartet weiterhin auf KlangweltReview)
+> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert.
 
 ---
 
@@ -56,8 +56,8 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
   - 23 neue Localization-Keys DE+EN als `extractionState: manual`.
   - **Test-Iteration:** Beim ersten Test State-Inkonsistenz Header ↔ Settings entdeckt — Ursache war `@StateObject` mit Singleton (Apple-Anti-Pattern) plus `@State`-basierte `.repeatForever()`-Animation, die bei Status-Wechsel nicht sauber stoppte. Fix: `@StateObject` raus, direkter `.environmentObject(.shared)`-Inject; `CloudKitStatusDot` auf `TimelineView(.animation)` umgebaut, `if shouldPulse { PulsingCircle } else { Circle }`-Pattern (Subview wird beim Status-Wechsel komplett ausgetauscht, kein lingering Animation-State).
   - **Farbe** des Status-Punkts auf `Color(.systemGreen)` für `.synced` (Apple-System-Grün, hell und frisch). Der Fortschrittsring nutzt noch das alte matte Grün — das adressiert das spätere Design-Review.
-- [↗] **Build 10723** — Sound-Kaskaden (B-S2) → **verschoben nach v1.7.1, neue Buildnummer 10729**. Begründung: hängt von KlangweltReview-Entscheidung ab, heute nicht als reine Ausführungs-Etappe lösbar.
-- [↗] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46) → **verschoben nach v1.7.1, neue Buildnummer 10728**. Begründung: nicht mehr in den v1.7.0-Train integriert, weil 10725 (SoundManager preview-API) und 10726 (WhatsNewView) inhaltlich näher am Release-Cut lagen.
+- [↗] **Build 10723** — Sound-Kaskaden (B-S2) → **verschoben nach v1.7.1, neue Buildnummer 10728**. Begründung: hängt von KlangweltReview-Entscheidung ab, heute nicht als reine Ausführungs-Etappe lösbar.
+- [x] **Build 10724** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46) — MusicArtwork-Komponente + TrackSource-Refactor. Commit `e597629`, Tag `v1.7.0-b10724` (03.05.2026 08:08). MusicPlayerView.swift -108/+89, MusicManager.swift +9. Bestandteil der App-Store-Version v1.7.0 (Build 10726).
 - [x] **Build 10725** — SoundManager preview-API (C-S42) + tagKomplett-Doppelton-Duplikat eliminiert (C-A45 Beifang) + CHANGELOG-Sweep. Commit `d196ea2`, Tag `v1.7.0-b10725`. Drei Stränge in atomic commit: (1) `SoundManager.preview(action:world:volume:)` neu, übergeht `isEnabled` und Haptic, volume explizit; SoundtestView delegiert komplett, eigener `audioPlayer`-State entfernt. (2) Doppelton-Duplikat zwischen SoundManager und SoundtestView durch Delegation aufgelöst. (3) CHANGELOG.md im App-Repo nachgepflegt: 10717-Eintrag korrigiert (war fälschlich „F3 SubTask-Sheet dismiss", korrekt ist C-S38/C-S39/F10 vom 29.04.), Builds 10718–10725 chronologisch nachgetragen. Test-Befund F15 entdeckt (siehe v1.7.1-Block).
 - [ ] **Build 10726** — WhatsNewView-Inhalt für v1.7.0 + Layout-Update (Option C). Vier thematische Features: iCloud-Status auf einen Blick · Frischer Heute-Bildschirm · Demo & Präsentation für alle · Neuerungen jederzeit nachlesen. Layout-Wechsel: Versions-Info wandert vom Header in einen visuell umrahmten Block mit Gold-Tint und Caption-Überschrift „Neu in Version 1.7.0". Schluss-Satz „Stabilitäts- und Detailverbesserungen unter der Haube" vor dem Button. Letzter Code-Schritt vor App-Store-Submission v1.7.0.
 
@@ -81,8 +81,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 Reihenfolge fixiert am 04.05.2026 nach v1.7.0-Release. Die anderen v1.7.1-Findings (F4, F5, F6, F7, F9, F14, B1, Reviews) bleiben weiter ohne feste Buildnummer im Backlog.
 
 - [ ] **Build 10727** — F15 (Lautstärke-Differenzierung der Volume-Stufen, `SoundManager.swift` + Footer-Hinweis in `SoundtestView`). Erste v1.7.1-Code-Etappe; in sich abgeschlossen, ohne externe Vorbedingung.
-- [ ] **Build 10728** — MusicPlayerView Konsolidierung (C-S43, C-S44, C-S45, C-S46). Mechanisch, alle vier Befunde in derselben Datei. Vormals Build 10724 in v1.7.0.
-- [ ] **Build 10729** — Sound-Kaskaden (B-S2). Hängt vom KlangweltReview ab — nach Review einplanen. Vormals Build 10723 in v1.7.0, dann kurz 10727.
+- [ ] **Build 10728** — Sound-Kaskaden (B-S2). Hängt vom KlangweltReview ab — nach Review einplanen. Vormals Build 10723 in v1.7.0.
 
 ### Plan-vs-Realität-Block
 
@@ -232,7 +231,7 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
-- [ ] **Build 10729** — Sound-Kaskaden (B-S2, ursprünglich als 10723 geplant, am 03.05.2026 als 10727 verschoben, am 04.05.2026 auf 10729 verschoben — F15 und MusicPlayerView wurden vorgezogen). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
+- [ ] **Build 10728** — Sound-Kaskaden (B-S2, ursprünglich als 10723 in v1.7.0 geplant, in v1.7.1 als 10728 eingetaktet — F15 wird vorgezogen). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
 - [ ] ElevenLabs Prompt-Länge testen (Tool generiert 10–20 % kürzer als spezifiziert → Prompts etwas länger ansetzen)
@@ -280,34 +279,38 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 
 ## Wochenplanung
 
-**Aktueller Stand (02.05.2026 abends):**
-- **v1.7.0 funktional komplett — alle Release-Blocker gelöst.** Builds 10718 + 10719 + 10720 + 10721 + 10722 gepusht und getaggt — fünf Code-Builds an einem Tag, alle einzeln getestet, alle einzeln rollback-fähig.
-- 18+ von 108 Code-Review-Befunden erledigt (5 C-S + 1 C-M Tote-Code in 10720 + B-M2 in 10722, plus die schon vorhandenen 14). Localization-Cluster in 10721 als Cluster aufgelöst.
-- B-M2 (Import-Sperre bei aktivem CloudKit-Sync) ist final gelöst — substantielle Erweiterung gegenüber dem ursprünglichen Konzept zu einer vollen iCloud-Status-Architektur (Observer + UI-Anzeigen + Sperren-Mechanik). Wiederhersteller-Fall transparent für den Nutzer.
-- F1, F3, F8 erledigt (in Build 10720 mitgelöst)
-- F11 verifiziert und widerlegt (Sound im Edit-Sheet hörbar) — Mini-Befund zu `.erledigteEntfernt`-Fallback an KlangweltReview/WAV-Review angehängt
-- F12 (`syncStatus()`-Lock) bleibt offener Befund für v1.7.1
-- F13 + F14 als neue UX-Findings v1.7.1 aufgenommen (beim 10720-Test entdeckt)
-- Latentbug seit v1.6.1 (Cleanup-Bestätigung zeigte Source-Key statt Übersetzung) in 10721 mit-eliminiert
-- Plural-Variations + App-weite Farbpalette-Konsistenz als Folge-Items im C-Pool
+**Aktueller Stand (04.05.2026):**
+- **v1.7.0 (Build 10726) seit 04.05.2026 im App Store live.** Builds 10713–10726 alle abgeschlossen, getaggt, gepusht. Letzter Code-Build vor Submission war 10726 (WhatsNewView).
+- **F12 + F13 am 04.05.2026 verifiziert und geschlossen** — beide nicht reproduzierbar, vermutlich implizit gefixt durch den `setStatus(_:manually:)`-Helper aus 10711 und die Subtask-Operations-Konsolidierung aus 10716/10717.
+- **Build 10724 (MusicPlayerView-Konsolidierung) ist Bestandteil von v1.7.0** — die kurzzeitige Verschiebung nach v1.7.1 in der Doku am 04.05.2026 vormittags war Irrtum, am Nachmittag korrigiert.
+- v1.7.1-Build-Sequenz fixiert: **10727 F15** (Lautstärke-Differenzierung, laufende Etappe), **10728 Sound-Kaskaden** (B-S2, hängt am KlangweltReview).
 
-**Nächste Schritte sind keine Builds mehr, sondern Release-Vorbereitung:**
+**Nächste Code-Etappe(n):**
+1. Build 10727 (F15) abschließen, Hörprobe auf Real-Device verifizieren, Werte ggf. nachjustieren.
+2. KlangweltReview vor Build 10728 — Sound-Kaskaden-Umsetzung hängt davon ab (Player-Pool zur Kaskade vs. bewusster Abbruch des laufenden Sounds).
 
-1. **WhatsNewView-Inhalt für v1.7.0** — Feature-Liste in `OnboardingView.swift` aktualisieren (Demo & Präsentation für Endnutzer, „Was ist neu"-Button, iCloud-Status-Anzeige, Cleanup-Verbesserungen).
-2. **CHANGELOG-Pflege** — alle fünf heutigen Builds plus die vorherigen v1.7.0-Builds dokumentieren.
-3. **TestFlight-Sammelupload** der Builds 10716–10722 als ein gemeinsamer Test.
-4. **App-Store-Submission** nach erfolgreichem TestFlight-Test.
-
-**Optional zwischendurch (Wochenende):**
-- WAVs Cityflow + Horizont reviewen (inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation)
-- System-Klangwelt-WAVs vorbereiten
-
-**Nach v1.7.0-Release:**
-- v1.7.1 startet mit B1 (Historie als Protokoll), F4, F7, F9, F12, F13 — Plan-vs-Realität-Block
-- F12 + F13 (`syncStatus()`/Lock-Mechanismus) — vermutlich gleicher Fix-Pfad, Test-Aufwand spürbar (alle Status-Wechsel-Pfade durchspielen)
+**v1.7.1-Backlog ohne feste Buildnummer:**
+- F4 (markOpen lässt Folge-Instanz bestehen) — Klärung gemeinsam mit B1, weil verwandte Frage „was passiert mit erledigten Instanzen wenn man sie reaktiviert"
+- F5 (kurzlebige Duplikate in Abgeschlossen-Sektion) — reine Verifikations-Etappe, vermutlich durch 10715 (TaskScheduler `@MainActor`) bereits mit-gelöst
+- F6 (`unsafeForcedSync`-Console-Warning) — Diagnose-Etappe, kein Blocker
+- F7 (`doesNotExpire`-Konzept-Review) — Konzept-Punkt im Plan-vs-Realität-Block
+- F9 (Inline-Expand in Heute-Liste schwer auffindbar) — UX-Frage
 - F14 (`AddTaskView`-Fokus-Latenz) — Diagnose-Etappe, Lade-Profil prüfen
+- B1 (Historie als echtes Protokoll) — größerer Konzept- und Code-Block, eigene Strategie-Session sinnvoll vor Umsetzung
+
+**Reviews & Design:**
 - TemplatePaletteReview, KlangweltReview, Hauptaufgaben-Design
-- Strict Concurrency auf "Complete" als eigene Etappe
+- App-weite Farbpalette-Konsistenz (Vermerk aus 10722 — Status-Punkt vs. Fortschrittsring)
+- WAV-Review Cityflow + Horizont (~30 Dateien), inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation
+- System-Klangwelt vollständig mit eigenen WAVs
+
+**Onboarding-Verfeinerung (v1.7.x):**
+- Default-Kategorien + Mustertemplate „MyCadenza einrichten" — siehe Konzept-Dokument `MyCadenza_FeatureKonzepte_v1_7_x.md`. Nach Abschluss der v1.7.1-Build-Sequenz.
+
+**Strategische Themen für eigene Strategie-Sessions:**
+- Strict Concurrency auf "Complete" — eigene Etappe wegen erwarteter Welle, nach v1.7.1
+- Plural-Variations für Format-Strings (Vermerk aus 10721) — relevant bei Sprach-Erweiterung über DE/EN hinaus
+- Pricing, Distribution, Vision — wenn das Thema reif ist, nach Beobachtungsphase v1.7.0
 
 ---
 
