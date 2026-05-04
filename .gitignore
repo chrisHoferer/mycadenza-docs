@@ -22,3 +22,6 @@ private/
 # Arbeitsdateien (Excel-Worksheets etc., werden lokal gepflegt
 # und ggf. später als CSV/MD ins Archiv überführt)
 *.xlsx
+# Ausnahme: Klangwelt-Bewertung gehört zur Klangwelt-Inventar-Säule
+# und wird mit-versioniert.
+!Klangwelt/MCK_Bewertung.xlsx
