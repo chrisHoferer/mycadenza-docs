@@ -231,6 +231,7 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
+- [x] **WAV-Hygiene 04.05.2026** — Cityflow: 5 Dateien `cityflow <aktion>.wav` (mit Leerzeichen, zur Laufzeit nicht auffindbar) in Xcode auf `cityflow_<aktion>.wav` umbenannt; 4 tote `*uiAktion.wav`-Dateien aus Morgenwald/Salon/Cityflow/Horizont entfernt (`uiAktion` ist seit längerem keine `SoundAction` mehr); Subordner-Casing konsolidiert auf konsistent groß (`Cityflow/Morgenwald/Salon/Horizont/`). Reine Resource-Hygiene — kein Buildnummer-Bump, kein Tag. App-Repo Commit `59aac74`. Stand vor Klangwelt-Volltest sauber. Schema und Inventar dokumentiert in `MyCadenza_Klangwelt_Dateischema.md`.
 - [ ] **Build 10728** — Sound-Kaskaden (B-S2, ursprünglich als 10723 in v1.7.0 geplant, in v1.7.1 als 10728 eingetaktet — F15 wird vorgezogen). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
