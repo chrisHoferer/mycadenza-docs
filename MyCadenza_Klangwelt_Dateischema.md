@@ -18,7 +18,7 @@ Beispiele:
 
 Beide Bestandteile entsprechen den `rawValue`-Strings der Swift-Enums `SoundWorld` bzw. `SoundAction` in `SoundManager.swift`. Casing ist signifikant — Swift `Bundle.main.url(forResource:withExtension:)` ist case-sensitive.
 
-Der `Sounds/`-Ordner ist im Xcode-Projekt als **Folder-Reference (blaue Mappe)** eingebunden — die einzelnen WAVs werden nicht in `project.pbxproj` als File-References gepflegt, Xcode kopiert beim Build automatisch alle Dateien im Sounds-Baum ins Bundle. Subordner-Pfade und Subordner-Casing sind zur Laufzeit irrelevant, weil `Bundle.main.url` ohne `subdirectory:`-Parameter aufgerufen wird (flacher Bundle-Lookup).
+**Hinweis zur Xcode-Integration:** Der `Sounds/`-Ordner ist im Xcode-Projekt als Folder-Reference (blaue Mappe) eingebunden, nicht als Group. Beim Build kopiert Xcode alle WAVs flach ins App-Bundle — neue Dateien in `Sounds/<Klangwelt>/` werden automatisch erfasst, ein manueller pbxproj-Edit ist nicht nötig. Subordner-Pfade spielen zur Laufzeit keine Rolle, weil `Bundle.main.url(forResource:withExtension:)` ohne `subdirectory:`-Parameter aufgerufen wird.
 
 ## Sucht-Hierarchie zur Laufzeit
 
@@ -146,8 +146,8 @@ Funktional unauffällig durch die Sucht-Hierarchie, klingt aber nicht differenzi
 ### Hygiene-Stand hergestellt am 04.05.2026
 - Vorher: Cityflow hatte 5 Dateien mit Leerzeichen im Namen (`cityflow <aktion>.wav`), die zur Laufzeit nicht gefunden wurden, weil das Sucht-Pattern Unterstrich verlangt.
 - Vorher: 4 tote `*uiAktion.wav`-Dateien (eine pro WAV-Klangwelt) zu einer Aktion, die im Code nicht mehr existiert.
-- Vorher: Subordner-Casing inkonsistent (`cityflow/`, `morgenwald/`, `salon/` klein, `Horizont/` groß) — beim Hygiene-Schritt mit-konsolidiert auf konsistent groß (`Cityflow/`, `Morgenwald/`, `Salon/`, `Horizont/`). Funktional irrelevant, weil `Sounds/` als Folder-Reference eingebunden ist.
-- Hygiene-Commit `59aac74` im App-Repo, kein Buildnummer-Bump, kein Tag.
+- Vorher: Subordner-Casing inkonsistent (`cityflow/`, `morgenwald/`, `salon/` klein, `Horizont/` groß) — funktional irrelevant wegen Folder-Reference (siehe „Schema"-Sektion), aber visuell unsauber.
+- Bereinigung am 04.05.2026 in Xcode; Hygiene-Commit `59aac74` im App-Repo, kein Buildnummer-Bump, kein Tag.
 
 ## Verweise
 
