@@ -18,3 +18,7 @@ Icon?
 # Privater Arbeitsbereich (lokal, nicht versioniert)
 private/
 *.private.md
+
+# Arbeitsdateien (Excel-Worksheets etc., werden lokal gepflegt
+# und ggf. später als CSV/MD ins Archiv überführt)
+*.xlsx
