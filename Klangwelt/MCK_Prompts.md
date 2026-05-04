@@ -482,12 +482,11 @@
 1. Pro Ereignis × Klangwelt einen der Prompts in ElevenLabs eingeben.
 2. Vier Varianten generieren lassen.
 3. Beste Variante auswählen, optional kürzen/anpassen.
-4. WAV laden, in App einbauen, in der Bewertungstabelle (`MyCadenza_Klangwelt_Bewertung.xlsx`) eintragen.
+4. WAV laden, in App einbauen, in der Bewertungstabelle (`MCK_Bewertung.xlsx`) eintragen.
 5. Falls keine der vier Varianten passt: alternativen Prompt aus der Liste probieren oder eigenen Prompt schreiben.
 
 ## Verweise
 
-- Schema-Doku: `MyCadenza_Klangwelt_Dateischema.md`
-- Bewertungstabelle: `MyCadenza_Klangwelt_Bewertung.xlsx`
+- Schema-Doku: `MCK_Dateischema.md`
+- Bewertungstabelle: `MCK_Bewertung.xlsx`
 - Code-Definition: `SoundManager.swift` (App-Repo)
-- Bestehende Prompts (vor 04.05.2026): `Cadenza_ElevenLabs_Prompts.md`

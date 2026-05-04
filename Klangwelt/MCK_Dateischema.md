@@ -153,5 +153,5 @@ Funktional unauffällig durch die Sucht-Hierarchie, klingt aber nicht differenzi
 
 - Code-Definition: `SoundManager.swift` — `enum SoundWorld` (Z. 9-37), `enum SoundAction` (Z. 42-153)
 - Sucht-Logik: `SoundManager.swift` — `playBundleSound(action:world:isHighPriority:)` (etwa Z. 419-441)
-- ElevenLabs-Prompts: `Cadenza_ElevenLabs_Prompts.md`
+- ElevenLabs-Prompts: `MCK_Prompts.md`
 - Backlog WAV-Review: `MyCadenza_TodoList_v1_7.md` (WAVs & Sound-Sektion)

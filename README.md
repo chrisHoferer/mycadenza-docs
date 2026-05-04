@@ -25,12 +25,12 @@ it is discussed verbally or kept in a private local file (gitignored), never com
 * `MyCadenza_Funktionsuebersicht.md` — Feature overview from user perspective; basis for tutorials (DE)
 * `Cadenza_Projektstruktur.md` — Code structure reference for development sessions (DE)
 * `MyCadenza_FeatureKonzepte_v1_7_x.md` — Detail concepts for default categories, sample template, onboarding refinement (DE)
-* `Cadenza_ElevenLabs_Prompts.md` — Sound generation prompts per Klangwelt (DE/EN)
+* `Klangwelt/MCK_Prompts.md` — Sound generation prompts per Klangwelt (DE/EN)
 
 ### Frozen — kept as historical reference
 
-* `MyCadenza_Zielarchitektur.md` — Pre-Vapor strategic architecture, frozen 25.04.2026, superseded by the Roadmap
-* `MyCadenza_CodeReview_v1_7_0.md` — Code review from the v1.7.0 cycle, closed on 03.05.2026 with the App Store submission, retained as finding-ID reference
+* `_eingefroren/MyCadenza_Zielarchitektur.md` — Pre-Vapor strategic architecture, frozen 25.04.2026, superseded by the Roadmap
+* `_eingefroren/MyCadenza_CodeReview_v1_7_0.md` — Code review from the v1.7.0 cycle, closed on 03.05.2026 with the App Store submission, retained as finding-ID reference
 
 ## Language
 

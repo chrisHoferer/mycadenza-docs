@@ -2,7 +2,7 @@
 
 > **Stand:** 04.05.2026 · Basis: **v1.7.1, Build 10727** (`MARKETING_VERSION = 1.7.1`, `CURRENT_PROJECT_VERSION = 10727` aus `ChrisMeinTag.xcodeproj/project.pbxproj`).
 >
-> **Zweck:** Vorbereitung des KlangweltReview (TodoList Block B). Reine Code-Aufruf-Inventur der Sound-Trigger-Seite — die WAV-Datei-Inventur ist separat in `MyCadenza_Klangwelt_Dateischema.md`, die ElevenLabs-Prompts liegen in `MyCadenza_ElevenLabs_Prompts_pro_Ereignis.md`.
+> **Zweck:** Vorbereitung des KlangweltReview (TodoList Block B). Reine Code-Aufruf-Inventur der Sound-Trigger-Seite — die WAV-Datei-Inventur ist separat in `MCK_Dateischema.md`, die ElevenLabs-Prompts liegen in `MCK_Prompts.md`.
 >
 > **Methodik:** Strukturierung nach Datei (nicht nach Funktionskategorie). Diskussion „braucht jede Stelle einen Sound?" folgt in claude.ai. Hier nur Sammlung.
 >

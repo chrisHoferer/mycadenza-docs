@@ -1,7 +1,29 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert.
+> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert. **Doku-Migration 04.05.2026:** Repo restrukturiert mit Subordnern `Klangwelt/`, `Designwelt/`, `_eingefroren/`; Klangwelt-/CodeReview-/Zielarchitektur-Dateien verschoben und kurzpräfix-umbenannt (MCK_/MCD_); Skeletons für Klangwelt- und Designwelt-Säule angelegt; siehe Doku-Struktur-Block direkt unten.
+
+---
+
+## Doku-Struktur (Stand 04.05.2026)
+
+Das Doku-Repo ist seit 04.05.2026 in drei Säulen + Top-Level organisiert:
+
+| Pfad | Inhalt | Präfix |
+|---|---|---|
+| `Klangwelt/` | Akustische Säule: Manifest, Methodik, Chartas, Schema, Prompts, Inventur, Bewertung | `MCK_` |
+| `Designwelt/` | Visuelle Säule: Manifest, Methodik, Farben, Typografie, Komponenten, Iconographie, Befunde | `MCD_` |
+| `_eingefroren/` | Snapshot-Archiv: nicht mehr aktiv gepflegte Dokumente, die einen Stand festhalten (Zielarchitektur, CodeReview v1.7.0) | — |
+| Top-Level | Organisatorische Doku: TodoList, Roadmap, Projektstruktur, Funktionsuebersicht, FeatureKonzepte, README, Gestaltung (Brücke Klangwelt ↔ Designwelt) | — |
+
+Präfix-Bedeutung:
+- `MCK_` = MyCadenza Klangwelt
+- `MCD_` = MyCadenza Designwelt
+
+Skeleton-Dokumente (Stand-Datum 04.05.2026, Inhalt folgt in späterer Etappe):
+- `MyCadenza_Gestaltung.md` (Brücke)
+- `Klangwelt/MCK_Manifest.md`, `MCK_Methodik.md`, `MCK_Chartas.md`
+- `Designwelt/MCD_Manifest.md`, `MCD_Methodik.md`, `MCD_Farben.md`, `MCD_Typografie.md`, `MCD_Komponenten.md`, `MCD_Iconographie.md`, `MCD_Befunde.md`
 
 ---
 
@@ -231,7 +253,7 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
 ### WAVs & Sound
 
-- [x] **WAV-Hygiene 04.05.2026** — Cityflow: 5 Dateien `cityflow <aktion>.wav` (mit Leerzeichen, zur Laufzeit nicht auffindbar) in Xcode auf `cityflow_<aktion>.wav` umbenannt; 4 tote `*uiAktion.wav`-Dateien aus allen WAV-Klangwelten entfernt; Subordner-Casing auf konsistent groß umgestellt (`Cityflow/`, `Morgenwald/`, `Salon/`, `Horizont/`). Reine Resource-Hygiene — kein Buildnummer-Bump, kein Tag. App-Repo Commit `59aac74`. Stand vor Klangwelt-Volltest sauber. Schema und Inventar dokumentiert in `MyCadenza_Klangwelt_Dateischema.md`.
+- [x] **WAV-Hygiene 04.05.2026** — Cityflow: 5 Dateien `cityflow <aktion>.wav` (mit Leerzeichen, zur Laufzeit nicht auffindbar) in Xcode auf `cityflow_<aktion>.wav` umbenannt; 4 tote `*uiAktion.wav`-Dateien aus allen WAV-Klangwelten entfernt; Subordner-Casing auf konsistent groß umgestellt (`Cityflow/`, `Morgenwald/`, `Salon/`, `Horizont/`). Reine Resource-Hygiene — kein Buildnummer-Bump, kein Tag. App-Repo Commit `59aac74`. Stand vor Klangwelt-Volltest sauber. Schema und Inventar dokumentiert in `Klangwelt/MCK_Dateischema.md`.
 - [ ] **Build 10728** — Sound-Kaskaden (B-S2, ursprünglich als 10723 in v1.7.0 geplant, in v1.7.1 als 10728 eingetaktet — F15 wird vorgezogen). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
 - [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
 - [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
@@ -343,8 +365,8 @@ Clean Build (⌘⇧K, dann ⌘B) → Simulator oder Gerät → Buildnummer in "�
 Simulator → echtes iPhone (Developer-Build) → TestFlight. Sauberer Verifikations-Pfad mit klarer Trenndiagnostik.
 
 **Referenzdokumente:**
-- `MyCadenza_CodeReview_v1.7.0.md` – Detailliste aller Code-Review-Findings, Session-Log, Umsetzungsplan
+- `_eingefroren/MyCadenza_CodeReview_v1_7_0.md` – Detailliste aller Code-Review-Findings, Session-Log, Umsetzungsplan
 - `Cadenza_Projektstruktur.md` – Projektstruktur & Bekannte Fallstricke
 - `MyCadenza_Funktionsuebersicht.md` – App-Funktionsweise
-- `MyCadenza_Zielarchitektur.md` – Strategischer Bezugsrahmen
-- MyCadenza_FeatureKonzepte_v1_7_x.md` – Detailkonzepte für Onboarding-Verfeinerung (Default-Kategorien, Mustertemplate)
+- `_eingefroren/MyCadenza_Zielarchitektur.md` – Strategischer Bezugsrahmen
+- `MyCadenza_FeatureKonzepte_v1_7_x.md` – Detailkonzepte für Onboarding-Verfeinerung (Default-Kategorien, Mustertemplate)

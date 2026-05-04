@@ -607,7 +607,7 @@ Im DEBUG-Build sichtbare Hilfen, gebündelt in der „Entwicklung"-Sektion der `
 Detaillierter Sprint-Plan und Befund-IDs:
 
 - **Single Source of Truth (Sprint):** `MyCadenza_TodoList_v1_7.md`
-- **Single Source of Truth (Befunde):** `MyCadenza_CodeReview_v1_7_0.md`
+- **Single Source of Truth (Befunde):** `_eingefroren/MyCadenza_CodeReview_v1_7_0.md`
 
 Offene größere Themen außerhalb der laufenden Sprint-Etappen:
 
@@ -627,7 +627,7 @@ Bei jeder neuen Session:
 
 1. **Diese Datei lesen** für Projektüberblick
 2. **§3 Klassen- und Methoden-Referenz** als erste Anlaufstelle bei Datei-/Methoden-Fragen — Datei-Anforderungen präzise mit Klassennamen + Methodennamen
-3. **`MyCadenza_TodoList_v1_7.md` und `MyCadenza_CodeReview_v1_7_0.md` als Single Source of Truth** für aktuellen Sprint und Befund-Status konsultieren
+3. **`MyCadenza_TodoList_v1_7.md` und `_eingefroren/MyCadenza_CodeReview_v1_7_0.md` als Single Source of Truth** für aktuellen Sprint und Befund-Status konsultieren
 4. **Betroffene Swift-Dateien anfordern** — nicht aus dem Gedächtnis arbeiten
 5. **Komplette Dateien liefern** — Chris bevorzugt Full-File-Replacement statt Diffs (bei großen Dateien gezielte Edits)
 6. **Umlaut-Regeln beachten:** alle `String(localized:)` Keys mit korrekten Umlauten (ä, ö, ü, ß), aber „Neue" und „zuerst" schützen
