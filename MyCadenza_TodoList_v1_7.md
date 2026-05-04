@@ -80,7 +80,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 
 Reihenfolge fixiert am 04.05.2026 nach v1.7.0-Release. Die anderen v1.7.1-Findings (F4, F5, F6, F7, F9, F14, B1, Reviews) bleiben weiter ohne feste Buildnummer im Backlog.
 
-- [ ] **Build 10727** — F15 (Lautstärke-Differenzierung der Volume-Stufen, `SoundManager.swift` + Footer-Hinweis in `SoundtestView`). Erste v1.7.1-Code-Etappe; in sich abgeschlossen, ohne externe Vorbedingung.
+- [x] **Build 10727** — F15 (Lautstärke-Differenzierung der Volume-Stufen). Commit `8fdd923`, Tag `v1.7.1-b10727`. Erste v1.7.1-Code-Etappe. Volume-Werte logarithmisch gespreizt (0.15/0.5/1.0), zweizeiliger Footer-Hinweis bei System-Klangwelt in `SoundtestView`, konditionaler Volume-Wirkungslos-Hinweis in `SettingsView` wenn `dayBookendSoundWorld == .system`. MARKETING_VERSION auf 1.7.1.
 - [ ] **Build 10728** — Sound-Kaskaden (B-S2). Hängt vom KlangweltReview ab — nach Review einplanen. Vormals Build 10723 in v1.7.0.
 
 ### Plan-vs-Realität-Block
@@ -146,10 +146,10 @@ Zusammengehörige UX-Findungen mit gemeinsamem Nenner: Die App denkt zu stark in
   **Lade-Profil zu prüfen:** Defaults-Berechnung beim View-Init (Standard-Gültigkeitsdauer, Verfallfrist, Standard-Wiederholung), Sheet-Animation und FocusState-Timing, mögliche iCloud-Sync-Side-Effects beim Anlegen einer neuen `MainTask`-Instanz, Kategorie-Liste-Fetch.
   v1.7.1.
 
-- [ ] **F15 · Lautstärke-Differenzierung der drei Stufen zu schwach**
+- [x] **F15 · Lautstärke-Differenzierung der drei Stufen zu schwach**
   Beim 10725-Test entdeckt (03.05.2026). Aktuelle Werte `quiet=0.3 / normal=0.6 / loud=1.0` sind linear gestuft, Lautstärke-Wahrnehmung ist aber logarithmisch — der Unterschied zwischen Leise und Normal fühlt sich kleiner an als zwischen Normal und Laut. Bei kurzen Tönen (0,5-Sek-Klicks) ist die Differenz besonders schwer wahrnehmbar.
   **Lösungsansatz:** Spreizung wie `0.15 / 0.5 / 1.0` erwägen (logarithmischer). Plus: bei System-Klangwelt ist der Volume-Picker technisch wirkungslos, weil `AudioServicesPlayAlertSound` die Volume-Property ignoriert — UI-Hinweis im Footer der System-Klangwelt sinnvoll. Datei: `SoundManager.swift` Z. 171-177 (`SoundVolume.volumeLevel`), plus `SoundtestView` für den Footer-Hinweis.
-  **Geplant als Build 10727 (erster v1.7.1-Build).**
+  **Erledigt mit Build 10727 (04.05.2026), Commit `8fdd923`, Tag `v1.7.1-b10727`.** Volume-Werte auf 0.15/0.5/1.0 gesetzt, Footer-Hinweis bei System-Klangwelt in `SoundtestView` erweitert (zweite Zeile zur Volume-Wirkungslosigkeit), konditionaler Hinweis in `SettingsView` ergänzt wenn `dayBookendSoundWorld == .system`. MARKETING_VERSION beider Targets auf 1.7.1 hochgezogen.
 
 ### Methodische TODOs vor Diagnose-Etappen
 
@@ -283,11 +283,10 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 - **v1.7.0 (Build 10726) seit 04.05.2026 im App Store live.** Builds 10713–10726 alle abgeschlossen, getaggt, gepusht. Letzter Code-Build vor Submission war 10726 (WhatsNewView).
 - **F12 + F13 am 04.05.2026 verifiziert und geschlossen** — beide nicht reproduzierbar, vermutlich implizit gefixt durch den `setStatus(_:manually:)`-Helper aus 10711 und die Subtask-Operations-Konsolidierung aus 10716/10717.
 - **Build 10724 (MusicPlayerView-Konsolidierung) ist Bestandteil von v1.7.0** — die kurzzeitige Verschiebung nach v1.7.1 in der Doku am 04.05.2026 vormittags war Irrtum, am Nachmittag korrigiert.
-- v1.7.1-Build-Sequenz fixiert: **10727 F15** (Lautstärke-Differenzierung, laufende Etappe), **10728 Sound-Kaskaden** (B-S2, hängt am KlangweltReview).
+- v1.7.1-Build-Sequenz: **10727 F15** (Lautstärke-Differenzierung, erledigt 04.05.2026), **10728 Sound-Kaskaden** (B-S2, hängt am KlangweltReview).
 
 **Nächste Code-Etappe(n):**
-1. Build 10727 (F15) abschließen, Hörprobe auf Real-Device verifizieren, Werte ggf. nachjustieren.
-2. KlangweltReview vor Build 10728 — Sound-Kaskaden-Umsetzung hängt davon ab (Player-Pool zur Kaskade vs. bewusster Abbruch des laufenden Sounds).
+1. KlangweltReview vor Build 10728 — Sound-Kaskaden-Umsetzung hängt davon ab (Player-Pool zur Kaskade vs. bewusster Abbruch des laufenden Sounds).
 
 **v1.7.1-Backlog ohne feste Buildnummer:**
 - F4 (markOpen lässt Folge-Instanz bestehen) — Klärung gemeinsam mit B1, weil verwandte Frage „was passiert mit erledigten Instanzen wenn man sie reaktiviert"

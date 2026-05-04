@@ -3,6 +3,7 @@
 > Dieses Dokument dient als Claude-Referenz für neue Sessions.
 > Stand: 04.05.2026
 > App Store: v1.7.0 (Build 10726) seit 04.05.2026 live · v1.6.1 (Build 10602) abgelöst
+> In Entwicklung: v1.7.1 (MARKETING_VERSION 1.7.1) · F15 erledigt mit Build 10727 (Commit `8fdd923`, Tag `v1.7.1-b10727`)
 
 ---
 
@@ -566,6 +567,7 @@ Im DEBUG-Build sichtbare Hilfen, gebündelt in der „Entwicklung"-Sektion der `
 ## 9. Aktueller Stand
 
 - **App Store:** v1.7.0 (Build 10726) seit 04.05.2026 live · v1.6.1 (Build 10602) abgelöst
+- **In Entwicklung:** v1.7.1 (MARKETING_VERSION 1.7.1) — F15 erledigt mit Build 10727 (Commit `8fdd923`, Tag `v1.7.1-b10727`, 04.05.2026)
 
 ### Implementiert in v1.7.0
 
