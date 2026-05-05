@@ -519,18 +519,6 @@ if let fallback = action.fallback {
 
 ---
 
-### `ChrisMeinTag/MusicManager.swift`
-
-**Z. 91 — `ApplicationMusicPlayer.shared`**
-```swift
-private let player = ApplicationMusicPlayer.shared
-```
-- **Sound:** Apple-Music-Wiedergabe (Tracks aus Mediathek/Streaming, vom Nutzer gewählt)
-- **Trigger:** Nutzer-Aktion in `MusicPlayerView` / `MusicPlayerBar` (Play/Pause/Skip)
-- **Annotation:** Nutzt eigene Audio-Session (`.playback` intern in MusicKit) — siehe Sektion 3 zur Wechselwirkung mit `SoundManager`. Frage in Sektion 4: ist Apple-Music-Wiedergabe Teil der KlangweltReview-Hoheit?
-
----
-
 ## Sektion 2 — Trigger-Stellen ohne Sound
 
 ### `ChrisMeinTag/EditorView.swift`
@@ -895,6 +883,12 @@ await MainActor.run {
 
 ---
 
+### Anmerkung — Validierungs-Architektur
+
+> **Speichern-Buttons in Editor-Sheets sind durchgängig via `.disabled(...)` gesperrt**, solange Eingaben unvollständig sind (z. B. `.disabled(title.isEmpty)`). Dadurch entstehen keine Validierungsfehler-Trigger zur Laufzeit — der Fehlerfall ist im UI eingefangen, bevor er ein akustisches Feedback bräuchte. Das ist eine bewusste Designentscheidung, keine Lücke. Bestätigt in der Sound-Verdienst-Diskussion (claude.ai, 05.05.2026).
+
+---
+
 ## Sektion 3 — Beobachtungen außerhalb des Auftrags
 
 > Nicht beheben, nur dokumentieren.
@@ -904,6 +898,8 @@ Die Datei heißt `SoundtestView.swift` (kleines „t") — der enthaltene struct
 
 **2. Audio-Session-Wechselwirkung MusicKit ↔ SoundManager**
 SoundManager konfiguriert `.ambient` einmalig im Init (Z. 229–230) und setzt diese Kategorie nie wieder. `ApplicationMusicPlayer` (MusicManager Z. 91) nutzt intern eine eigene Session-Konfiguration (typischerweise `.playback`). Wenn der Nutzer Apple Music startet und währenddessen ein Cadenza-Sound spielen soll (z. B. nach `playSubTaskDone`), läuft die AVAudioSession potenziell in der Konfiguration, die MusicKit hinterlassen hat. Verhalten in diesem Mischfall nicht verifiziert — könnte erklären, warum manche Cadenza-Sounds bei laufender Apple Music gefühlt anders/leiser klingen, sofern überhaupt. Empfehlung: beim KlangweltReview gezielt mit laufender Apple Music testen.
+
+**Thematische Hoheit (geklärt 05.05.2026):** MusicKit ist ein paralleles Audio-System parallel zum SoundManager. Es spielt Audio aus, gehört aber thematisch nicht in die Klangwelt-Hoheit (Hintergrundmusik vom Nutzer gewählt, nicht App-eigener Klang). Der frühere Sektion-1-Eintrag zu `MusicManager.swift` Z. 91 wurde daher nach Klärung in claude.ai am 05.05.2026 hierher verschoben — Apple-Music-Wiedergabe wird nicht als Klangwelt-Sound geführt.
 
 **3. Notification-Code aktiv, UI-Toggle disabled**
 SettingsView Z. 220 zeigt zwei Notification-Toggles als `.disabled(true)` mit „Bald verfügbar"-Badge. Gleichzeitig wird `TaskScheduler.scheduleReminder` aktiv aufgerufen, sobald eine Aufgabe `hasReminder = true` hat (NewTaskView Z. 598, EditTaskView Z. 831, CreateTaskFromTemplateView Z. 221). Der Notification-Sound (`.default`, TaskScheduler Z. 334) wird bei Reminder-Trigger gespielt, ohne dass der Nutzer den zentralen Settings-Toggle aktiviert hat. UI und Code sind nicht in Einklang. Für KlangweltReview relevant: System-Notification-Sound `.default` ist akustisch eine Stimme im Cadenza-Kosmos, ohne im SoundManager-Modell zu existieren.
@@ -938,7 +934,7 @@ Habe sie aufgenommen, weil sie technisch ein Sound-Trigger ist. Sie löst aber k
 Zwei Stellen: TaskScheduler Z. 334 (Reminder) und SettingsView Z. 866 (DailySummary). Der eigentliche Sound wird von iOS gespielt, nicht von SoundManager. Ist das Teil der KlangweltReview-Hoheit (custom sound files möglich via `UNNotificationSound(named:)`) oder ein eigenes Thema? Habe sie in Sektion 1 mit Annotation aufgenommen.
 
 **3. Gehört Apple-Music-Wiedergabe (`MusicManager.swift` Z. 91) in die Klangwelt-Diskussion?**
-MusicKit ist ein eigenes Audio-System parallel zum SoundManager. Es spielt Audio, ist aber thematisch ein anderes Konzept (Hintergrundmusik vom Nutzer gewählt) als die Cadenza-Klangwelten. In Sektion 1 mit Annotation, bitte einordnen.
+> **Beantwortet (claude.ai 05.05.2026):** Nein — siehe Sektion 3 Punkt 2 („Thematische Hoheit"). Apple-Music-Wiedergabe ist paralleles Audio-System, kein Klangwelt-Sound.
 
 **4. Ist Drag-and-Drop / Reorder grundsätzlich als „Trigger-Stelle" gemeint, oder Stille hier richtig?**
 Mehrere `.onMove`-Aufrufer (TodayView, EditorView, TemplateView, CategoryManagerView). Lange Drag-Bewegung mit jedem Pixel ein Klick wäre nervig — vermutlich richtig stumm. Falls aber der Drop-Moment markiert werden soll, sind die Stellen alle in Sektion 2 dokumentiert.
@@ -947,7 +943,7 @@ Mehrere `.onMove`-Aufrufer (TodayView, EditorView, TemplateView, CategoryManager
 Es gibt sehr viele `.sheet(...)`-Aufrufe in der Codebasis (~12+). Aktuell alle stumm. Diskussion: Sheet-Öffnen als Navigation oder als Workflow-Schritt? Habe nicht jede Sheet-Stelle einzeln aufgeführt, nur die in TodayView und ContentView als Beispiele.
 
 **6. Sind Validierungsfehler-Trigger gewollt, oder ist die Architektur „Button ist disabled bei ungültiger Eingabe" der bewusste Verzicht auf Fehler-Sounds?**
-Speichern-Buttons sind durchgängig via `.disabled(title.isEmpty)` o.ä. gesperrt. Es gibt keinen `playValidationFailed`-Sound, weil es keinen Validierungsfehler-Trigger gibt — der Button bleibt einfach inaktiv. Habe deshalb keine Validierungsfehler in Sektion 2 aufgenommen (leere Menge). Bitte bestätigen, dass dieses Design beibehalten werden soll.
+> **Beantwortet (claude.ai 05.05.2026):** Bewusster Verzicht — siehe Anmerkungs-Block am Ende von Sektion 2 („Validierungs-Architektur"). Speichern-Buttons sind durchgängig via `.disabled(...)` gesperrt; Validierungsfehler-Trigger entstehen zur Laufzeit nicht.
 
 **7. Soll der allererste App-Start (nach Onboarding-Abschluss) akustisch von späteren Tag-Beginnen unterscheidbar sein?**
 Aktuell gilt: Nach Onboarding-Abschluss läuft `runProcessing()` in CadenzaApp und spielt `playDayStarted()`. Es gibt keinen separaten „Welcome to MyCadenza"-Sound. Diskussion: gewollt, oder erstmaliger Klang anders gestalten?
