@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 04.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert. **Doku-Migration 04.05.2026:** Repo restrukturiert mit Subordnern `Klangwelt/`, `Designwelt/`, `_eingefroren/`; Klangwelt-/CodeReview-/Zielarchitektur-Dateien verschoben und kurzpräfix-umbenannt (MCK_/MCD_); Skeletons für Klangwelt- und Designwelt-Säule angelegt; siehe Doku-Struktur-Block direkt unten.
+> Stand: 05.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert. **Doku-Migration 04.05.2026:** Repo restrukturiert mit Subordnern `Klangwelt/`, `Designwelt/`, `_eingefroren/`; Klangwelt-/CodeReview-/Zielarchitektur-Dateien verschoben und kurzpräfix-umbenannt (MCK_/MCD_); Skeletons für Klangwelt- und Designwelt-Säule angelegt; siehe Doku-Struktur-Block direkt unten. **Klangwelt-Inhalts-Befüllung 05.05.2026:** `Klangwelt/MCK_Manifest.md` und `Klangwelt/MCK_Chartas.md` mit finalen Inhalten befüllt (Skeleton-Status verlassen) — `MCK_Methodik.md` bleibt vorerst Skeleton.
 
 ---
 
@@ -22,7 +22,7 @@ Präfix-Bedeutung:
 
 Skeleton-Dokumente (Stand-Datum 04.05.2026, Inhalt folgt in späterer Etappe):
 - `MyCadenza_Gestaltung.md` (Brücke)
-- `Klangwelt/MCK_Manifest.md`, `MCK_Methodik.md`, `MCK_Chartas.md`
+- `Klangwelt/MCK_Methodik.md` (MCK_Manifest.md und MCK_Chartas.md am 05.05.2026 befüllt — Skeleton-Status verlassen)
 - `Designwelt/MCD_Manifest.md`, `MCD_Methodik.md`, `MCD_Farben.md`, `MCD_Typografie.md`, `MCD_Komponenten.md`, `MCD_Iconographie.md`, `MCD_Befunde.md`
 
 ---
