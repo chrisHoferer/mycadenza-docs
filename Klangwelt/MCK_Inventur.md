@@ -1,6 +1,6 @@
 # Sound-Inventur MyCadenza
 
-> **Stand:** 04.05.2026 · Basis: **v1.7.1, Build 10727** (`MARKETING_VERSION = 1.7.1`, `CURRENT_PROJECT_VERSION = 10727` aus `ChrisMeinTag.xcodeproj/project.pbxproj`).
+> **Stand:** 06.05.2026 · Basis: **v1.7.1, Build 10727** (`MARKETING_VERSION = 1.7.1`, `CURRENT_PROJECT_VERSION = 10727` aus `ChrisMeinTag.xcodeproj/project.pbxproj`) · Sektion 5 (Sound-Verdienst-Beschluss) am 06.05.2026 angelegt — Arbeitsgrundlage für MCK_Methodik.md.
 >
 > **Zweck:** Vorbereitung des KlangweltReview (TodoList Block B). Reine Code-Aufruf-Inventur der Sound-Trigger-Seite — die WAV-Datei-Inventur ist separat in `MCK_Dateischema.md`, die ElevenLabs-Prompts liegen in `MCK_Prompts.md`.
 >
@@ -956,3 +956,68 @@ Würde die Auswahl direkter erfahrbar machen, ist aber bisher nicht implementier
 
 **10. Gehören Status-Wechsel von CloudKitStatusObserver (`.syncing` / `.synced` / `.failed`) zur akustischen Hoheit?**
 Alle fünf Status-Wechsel sind aktuell stumm. `.failed` wäre aus Nutzersicht relevant (Sync-Fehler), `.synced` nach `.syncing` zumindest beim ersten Mal pro Tag bestätigend. Aktuell bewusst stumm oder Lücke?
+
+---
+
+## Sektion 5 — Sound-Verdienst-Beschluss
+
+> **Stand:** 06.05.2026 · Beschlossen in claude.ai-Sitzung. Diese Sektion ist die Arbeitsgrundlage für `MCK_Methodik.md` und die anschließende Cluster-für-Cluster Prompt-Überarbeitung in `MCK_Prompts.md`.
+
+### Audio-Session-Konfiguration
+
+Kategorie `.ambient` mit Option `.duckOthers` (statt `.mixWithOthers`). Hintergrundmusik (Apple Music, später Spotify) wird systemseitig gedimmt, sobald ein Klangwelt-Sound spielt; Dimm-Tiefe ist iOS-systemfest (~ -10 bis -15 dB). 
+
+Volume-Resolution im SoundManager: bei `userVolume == .quiet && AVAudioSession.sharedInstance().isOtherAudioPlaying == true` wird effektiv auf `.normal` skaliert. Begründung: `.quiet` ist semantisch eine Quiet-Office-Stufe; mit Hintergrundmusik wäre Quiet praktisch unhörbar, der Use-Case der Quiet-Stufe greift in dem Kontext nicht.
+
+### Neue SoundActions (sechs)
+
+| Action (Arbeitsname) | Zweck | Trigger-Stellen |
+|---|---|---|
+| `.aktionRegistriert` | Level 1 — subtile Bestätigung, App hat die Eingabe entgegengenommen | Edit-Sheet schließt mit Änderung: `EditTaskView` (EditorView Z. 605 ff.), `EditTemplateView` (TemplateView Z. 318 ff.), `EditCategoryView` (CategoryManagerView Z. 249 ff.) — Cluster A. Nach destruktiver Aktion mit vorhergehender Warnung: EditorView Z. 837 Trash, TodayView Z. 1356/1646/1649 Cleanup × 2 + Reset — Cluster D Bestätigungs-Seite. |
+| `.aktionAbgeschlossen` | Level 2 — vollere Erfolgsmeldung, App-globale oder externe Aktion durchgeführt | Apple-Music verbunden (SettingsView Z. 291), Duplikate bereinigt (`performDuplicateCleanup`, SettingsView Z. 763), Alle Daten zurücksetzen (`resetAllData`, SettingsView Z. 834), Daten-Export/Import-Erfolg (SettingsView Z. 545/720 — ersetzt das bisherige `playExportImport`). |
+| `.warnungVorAktion` | Warn-Klang vor destruktiver Aktion (ConfirmationDialog erscheint) | EditorView Z. 837 Trash, TodayView Z. 1356/1646/1649 Cleanup × 2 + Reset, SettingsView Z. 355 Reset, SettingsView Z. 763 Duplikate. |
+| `.updateVerfuegbar` | Hinweis-Klang, „etwas deutlicher als dezent" | UpdateChecker Z. 71 / ContentView Z. 84 — Update-Alert erscheint. |
+| `.syncCompleted` | CloudKit Initial-Sync abgeschlossen | CloudKitStatusObserver Z. 214 — `.syncing → .synced` (initial). |
+| `.syncFailed` | CloudKit Sync-Fehler | CloudKitStatusObserver Z. 222 — `.syncing → .failed`. |
+
+Heuristik Level 1 vs. Level 2: subtil = einzelne Aufgabe / Inhalt-Veränderung; Erfolgsmeldung = App-globale Aktion / externes System.
+
+### Bestehende Sounds — Verschiebungen und Ablösungen
+
+- `playDayEnded` wird vom `.onAppear` des `DayReportView` (Z. 906) auf den Tap des Fortschrittsrings (TodayView Z. 280) verschoben. Sound reagiert auf den Trigger, nicht auf das Sheet.
+- `playExportImport` (eigene SoundAction in der bisherigen Inventur) wird durch `.aktionAbgeschlossen` ersetzt. Bei Code-Implementierung deprecate-markieren oder entfernen — Detail-Entscheidung in der Methodik.
+
+### Trigger-Logik — neue Sound-Wege
+
+- Klangwelt-Wechsel im Picker (Settings-Tab UND `EditCategoryView`): Vorhören mit `tagBegonnen` der gewählten Welt.
+- Toggle „Töne" aktivieren (SettingsView Z. 244): `tagBegonnen` der gewählten Welt — derselbe Mechanismus wie beim Picker. Begründung: der Nutzer hört direkt, wie die aktivierte Welt klingt; semantisch näher an „so klingt das jetzt" als an „Einstellung gespeichert".
+- Toggle „Haptisches Feedback" aktivieren (SettingsView Z. 263): nur Haptik, kein Klang.
+- Template erstellen via `saveAsTemplate` (EditorView Z. 808): `playTaskCreated`. Symmetrie zu TemplateView Z. 311, das ebenfalls `playTaskCreated` spielt.
+- ConfirmationDialogs vor destruktiver Aktion bekommen Doppelmarkierung: `.warnungVorAktion` beim Erscheinen, `.aktionRegistriert` (kleinere Aktionen, Cluster D) bzw. `.aktionAbgeschlossen` (App-globale Aktionen, Cluster F) nach Durchführung.
+
+### Bewusst stumm — Designentscheidung
+
+- **Reorder / `.onMove`** quer durch alle Views (EditorView Z. 190/218/775; TemplateView Z. 21/419; CategoryManagerView Z. 39; TodayView Z. 450/482/1557).
+- **Sheet-Öffnungen** (TodayView Z. 392/403/1622/1623/1633 und analog).
+- **Validierungsfehler** — Disabled-Architektur ist die bewusste Designentscheidung (siehe Anmerkung Sektion 2).
+- **App-Start: Splash, Onboarding-Schritte, „Los geht's", „Verstanden"** — der erste Tag-Beginn-Sound spielt erst durch die Tagesablauf-Logik in CadenzaApp, nicht durch App-Öffnen.
+- **WhatsNewView** — Öffnen, Schließen, „Verstanden"-Button.
+- **DEBUG-Buttons** (TEST-Markierungen, WhatsNew-Flag-Reset, Sound-Test-NavigationLink).
+- **Tab-Wechsel** und **Section-Header Expand/Collapse**.
+- **Aufgaben-Kategorie-Wechsel** (`.onChange(of: task.category)` in EditorView Z. 829) — Klangwelt-Wahl findet im Kategorie-Picker statt; der Aufgaben-Wechsel ist die Konsequenz, kein eigenständiger Wahl-Moment.
+- **Teilaufgaben hinzufügen** (EditorView Z. 791/Z. 966; TemplateView Z. 552) — zu kleinteilig.
+- **TaskScheduler-Side-Effects** (`processAllTasks` außer Verfall, `scheduleReminder`/`cancelReminder`, `updateBadge`, Background-Task-Wakeup) — Hintergrund-Vorgänge ohne Nutzer-Auslöser, Sound aus dem Nichts wäre verwirrend.
+
+### Eigenes Implementations-Item
+
+Push-Notifications (UN-Notification-Sounds) sollen Klangwelt-Identität bekommen — eigene Code-Etappe, weil eigene Audio-Session-Logik außerhalb der App-Foreground-Sounds. Aus diesem Sound-Verdienst-Beschluss ausgeklammert; bleibt als Backlog-Punkt im Klangwelt-Block der TodoList.
+
+### Cluster A — technische Detail-Frage zur Methodik
+
+Bei `@Bindable` mit Auto-Save persistiert jeder Tastendruck sofort. „Tatsächlich geändert" beim `.onDisappear` zu erkennen, braucht entweder einen Snapshot beim Öffnen + Diff beim Schließen oder ein `dirty`-Flag im ViewModel. Methodik-Entscheidung in `MCK_Methodik.md`, nicht in dieser Inventur-Sektion.
+
+### Folge-Schritte
+
+1. **`MCK_Methodik.md` befüllen** — 8-Slot-Schablone, ElevenLabs-Setup, Sound-Verdienst-Heuristik (Level-1 vs. Level-2), Robustheits-Konfiguration, Cluster-A-Dirty-Flag-Logik, bewusst-stille Trigger-Klassen, Haptik-Position.
+2. **Code-Etappe Audio-Session-Robustheit** — `.ambient` mit `.duckOthers`, Volume-Resolution mit `isOtherAudioPlaying`, Pre-Loading.
+3. **Cluster-für-Cluster Prompt-Überarbeitung in `MCK_Prompts.md`** — startet nach Methodik-Befüllung; ElevenLabs-WAVs werden komplett neu generiert nach den Designvorgaben aus Manifest, Chartas und Methodik.
