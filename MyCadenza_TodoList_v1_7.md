@@ -1,7 +1,7 @@
 # MyCadenza – ToDo-Liste
 
 > Konsolidierte Roadmap nach Code Review v1.7.0
-> Stand: 06.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert. **Doku-Migration 04.05.2026:** Repo restrukturiert mit Subordnern `Klangwelt/`, `Designwelt/`, `_eingefroren/`; Klangwelt-/CodeReview-/Zielarchitektur-Dateien verschoben und kurzpräfix-umbenannt (MCK_/MCD_); Skeletons für Klangwelt- und Designwelt-Säule angelegt; siehe Doku-Struktur-Block direkt unten. **Klangwelt-Inhalts-Befüllung 05.05.2026:** `Klangwelt/MCK_Manifest.md` und `Klangwelt/MCK_Chartas.md` mit finalen Inhalten befüllt (Skeleton-Status verlassen) — `MCK_Methodik.md` bleibt vorerst Skeleton. **Mini-Korrekturen 05.05.2026:** Zwei punktuelle Eingriffe in `Klangwelt/MCK_Inventur.md` — Apple-Music-Eintrag (`MusicManager.swift` Z. 91) aus Sektion 1 nach Sektion 3 verschoben (thematische Hoheit: MusicKit ist paralleles Audio-System, kein Klangwelt-Sound), Annotation zur Disabled-Architektur in Sektion 2 ergänzt (Validierungsfehler-Stille ist bewusst, weil Speichern-Buttons via `.disabled(...)` gesperrt sind). **Sound-Verdienst-Beschluss 06.05.2026:** Sektion 5 in MCK_Inventur.md angelegt — sechs neue SoundActions identifiziert (`.aktionRegistriert`, `.aktionAbgeschlossen`, `.warnungVorAktion`, `.updateVerfuegbar`, `.syncCompleted`, `.syncFailed`), Audio-Session-Konfiguration `.ambient + .duckOthers` mit Volume-Resolution beschlossen. WAVs werden nach Methodik-Befüllung komplett neu generiert. **Klangwelt-Methodik vollständig befüllt 06.05.2026:** `Klangwelt/MCK_Methodik.md` aus Skeleton-Status (243 B) in 9-Sektionen-Vollfassung (~539 Zeilen) überführt — Zweck/Bezugsrahmen, Sound-Verdienst-Heuristik, Sound-Längen-Konvention, Aktions-Klassifikation, Audio-Session-Konfiguration, ElevenLabs-Workflow, Iterations-Methodik, Cluster A Dirty-Flag-Logik, Haptik-Annex. Drei TODO-Items abgeleitet: Haptik-Säulen-Frage, Code-Etappe Audio-Session-Robustheit, MCK_Bewertung.xlsx-Restrukturierung. **MCK_Bewertung.xlsx restrukturiert 06.05.2026 (`27d90db`):** Sheet-Struktur auf 16-Aktionen-Architektur umgebaut — Inventur (umbenanntes „Bewertung") + 5 Welt-Sheets (Morgenwald, Salon, Cityflow, Horizont, System) + erweiterte Legende; 80 Sound-Slots (16 × 5); Dateinamen-Schema `<welt-2b>_<klang-2b><slot-2-stell>.wav` (Beispiel: `sa_pn04.wav` = Salon, Piano, Slot 04 = hauptaufgabeKomplett). TODO-Item „MCK_Bewertung.xlsx restrukturieren" damit erledigt.
+> Stand: 06.05.2026 · **v1.7.0 (Build 10726) im App Store live seit 04.05.2026** · F12 + F13 am 04.05.2026 verifiziert und geschlossen (beide nicht reproduzierbar, vermutlich implizit gefixt durch setStatus-Helper aus 10711 und Subtask-Operations-Konsolidierung aus 10716/10717) · v1.7.1-Build-Reihenfolge fixiert: 10727 F15 (Lautstärke), 10728 Sound-Kaskaden (wartet weiterhin auf KlangweltReview). Doku-Korrektur 04.05.2026: Build 10724 (MusicPlayerView-Konsolidierung) ist seit 03.05.2026 als v1.7.0 b10724 ausgeliefert — die kurzzeitige Verschiebung nach v1.7.1 war Irrtum, jetzt korrigiert. **Doku-Migration 04.05.2026:** Repo restrukturiert mit Subordnern `Klangwelt/`, `Designwelt/`, `_eingefroren/`; Klangwelt-/CodeReview-/Zielarchitektur-Dateien verschoben und kurzpräfix-umbenannt (MCK_/MCD_); Skeletons für Klangwelt- und Designwelt-Säule angelegt; siehe Doku-Struktur-Block direkt unten. **Klangwelt-Inhalts-Befüllung 05.05.2026:** `Klangwelt/MCK_Manifest.md` und `Klangwelt/MCK_Chartas.md` mit finalen Inhalten befüllt (Skeleton-Status verlassen) — `MCK_Methodik.md` bleibt vorerst Skeleton. **Mini-Korrekturen 05.05.2026:** Zwei punktuelle Eingriffe in `Klangwelt/MCK_Inventur.md` — Apple-Music-Eintrag (`MusicManager.swift` Z. 91) aus Sektion 1 nach Sektion 3 verschoben (thematische Hoheit: MusicKit ist paralleles Audio-System, kein Klangwelt-Sound), Annotation zur Disabled-Architektur in Sektion 2 ergänzt (Validierungsfehler-Stille ist bewusst, weil Speichern-Buttons via `.disabled(...)` gesperrt sind). **Sound-Verdienst-Beschluss 06.05.2026:** Sektion 5 in MCK_Inventur.md angelegt — sechs neue SoundActions identifiziert (`.aktionRegistriert`, `.aktionAbgeschlossen`, `.warnungVorAktion`, `.updateVerfuegbar`, `.syncCompleted`, `.syncFailed`), Audio-Session-Konfiguration `.ambient + .duckOthers` mit Volume-Resolution beschlossen. WAVs werden nach Methodik-Befüllung komplett neu generiert. **Klangwelt-Methodik vollständig befüllt 06.05.2026:** `Klangwelt/MCK_Methodik.md` aus Skeleton-Status (243 B) in 9-Sektionen-Vollfassung (~539 Zeilen) überführt — Zweck/Bezugsrahmen, Sound-Verdienst-Heuristik, Sound-Längen-Konvention, Aktions-Klassifikation, Audio-Session-Konfiguration, ElevenLabs-Workflow, Iterations-Methodik, Cluster A Dirty-Flag-Logik, Haptik-Annex. Drei TODO-Items abgeleitet: Haptik-Säulen-Frage, Code-Etappe Audio-Session-Robustheit, MCK_Bewertung.xlsx-Restrukturierung. **MCK_Bewertung.xlsx restrukturiert 06.05.2026 (`27d90db`):** Sheet-Struktur auf 16-Aktionen-Architektur umgebaut — Inventur (umbenanntes „Bewertung") + 5 Welt-Sheets (Morgenwald, Salon, Cityflow, Horizont, System) + erweiterte Legende; 80 Sound-Slots (16 × 5); Dateinamen-Schema `<welt-2b>_<klang-2b><slot-2-stell>.wav` (Beispiel: `sa_pn04.wav` = Salon, Piano, Slot 04 = hauptaufgabeKomplett). TODO-Item „MCK_Bewertung.xlsx restrukturieren" damit erledigt. **Klangwelt-Umsetzungs-Phasen-Plan 06.05.2026:** TodoList-Sektion „WAVs & Sound" zu „Klangwelt-Umsetzung" umstrukturiert — fünf Phasen (Test, Salon-Produktion, übrige Welten, Code-Änderungen, Test+Evaluation am Gerät), Pflichtlektüre-Block plus zentrale Beschlüsse aus der Methodik-Etappe als Wiedereinstiegspunkt. Klangwelt-relevante Items aus Reviews & Design, Build-Etappen v1.7.1 (Build 10728 mit Querverweis), Wochenplanung („Nächste Code-Etappe(n)" → „Nächste Etappe(n)") und v1.7.1-Strategischer-Übersicht konsolidiert auf den Phasen-Plan.
 
 ---
 
@@ -103,7 +103,7 @@ Die Aufgaben sind in vier Blöcke aufgeteilt:
 Reihenfolge fixiert am 04.05.2026 nach v1.7.0-Release. Die anderen v1.7.1-Findings (F4, F5, F6, F7, F9, F14, B1, Reviews) bleiben weiter ohne feste Buildnummer im Backlog.
 
 - [x] **Build 10727** — F15 (Lautstärke-Differenzierung der Volume-Stufen). Commit `8fdd923`, Tag `v1.7.1-b10727`. Erste v1.7.1-Code-Etappe. Volume-Werte logarithmisch gespreizt (0.15/0.5/1.0), zweizeiliger Footer-Hinweis bei System-Klangwelt in `SoundtestView`, konditionaler Volume-Wirkungslos-Hinweis in `SettingsView` wenn `dayBookendSoundWorld == .system`. MARKETING_VERSION auf 1.7.1.
-- [ ] **Build 10728** — Sound-Kaskaden (B-S2). Hängt vom KlangweltReview ab — nach Review einplanen. Vormals Build 10723 in v1.7.0.
+- [ ] **Build 10728** — Sound-Kaskaden (B-S2). Inhaltlich aufgegangen im Klangwelt-Umsetzungs-Phasen-Plan (Phase 4f, siehe Sektion „Klangwelt-Umsetzung"). Konkrete Buildnummer wird bei Etappenplanung der Phase 4 festgelegt — Phase 4 kann als ein oder mehrere Builds realisiert werden. Vormals Build 10723 in v1.7.0.
 
 ### Plan-vs-Realität-Block
 
@@ -207,8 +207,6 @@ Verbindliche Vokabeln für Diagnose-Etappen ab Build 10718.
 
 - [ ] **TemplatePaletteReview** – Durchsicht der Template-Farbpalette
 - [ ] **App-weite Farbpalette-Konsistenz** (Vermerk aus 10722) — Beim 10722-Test wurde der `CloudKitStatusDot` auf `Color(.systemGreen)` umgestellt (hell, frisch, Apple-System-Standard). Der Fortschrittsring (`ProgressRingView`) zeigt aber noch das alte matte Grün (`Color.green`/Hex-Variante). Im Rahmen des Design-Reviews gemeinsam entscheiden, welche Grün-Töne app-weit Verwendung finden — Status-Indikatoren, Fortschrittsring, „erledigt"-Markierungen evtl. unterschiedlich. Heute bewusst nicht halbgar mitgeändert.
-- [ ] **KlangweltReview** – Durchsicht der vier Klangwelten. **Mini-Befund aus F11-Verifikation (02.05.2026):** `.erledigteEntfernt` fällt in einer Klangwelt auf `.teilaufgabeUebersprungen` zurück (Fallback in `SoundManager` Z. 113). Konkrete WAV-Lücke beim Review identifizieren und schließen.
-- [ ] **System-Klangwelt vollständig mit eigenen WAVs** — Erkenntnis aus 10716-Test: System-Töne fallen bei kurzen Aktionen (`playSubTaskDone` etc.) kaum hörbar aus. Soll Teil des KlangweltReview werden.
 - [ ] **Hauptaufgaben-Design** – Abstimmung Website-Darstellung mit App-Design
 - [ ] **Haptik-Säulen-Frage überprüfen** — Heute ist Haptik als Annex der Klangwelt geführt (siehe `Klangwelt/MCK_Methodik.md` Sektion 9). Bei späteren Erweiterungen (welt-spezifische Haptik-Profile, Accessibility-Layer, eigenständige Haptik-Designs unabhängig vom Sound) ist die Säulen-Frage neu zu bewerten. Zeitpunkt offen — vermutlich nach Klangwelt-Vollendung.
 
@@ -252,14 +250,84 @@ Zwei eng verzahnte Features für Neuanwender, die auf der in Build 10722 (B-M2) 
 * Konkretes Onboarding-Begleiter-Icon
 * Texte der sechs Teilaufgaben
 * UX-Detail zur Abwählbarkeit von Defaults im Onboarding
-### WAVs & Sound
+### Klangwelt-Umsetzung
 
-- [x] **WAV-Hygiene 04.05.2026** — Cityflow: 5 Dateien `cityflow <aktion>.wav` (mit Leerzeichen, zur Laufzeit nicht auffindbar) in Xcode auf `cityflow_<aktion>.wav` umbenannt; 4 tote `*uiAktion.wav`-Dateien aus allen WAV-Klangwelten entfernt; Subordner-Casing auf konsistent groß umgestellt (`Cityflow/`, `Morgenwald/`, `Salon/`, `Horizont/`). Reine Resource-Hygiene — kein Buildnummer-Bump, kein Tag. App-Repo Commit `59aac74`. Stand vor Klangwelt-Volltest sauber. Schema und Inventar dokumentiert in `Klangwelt/MCK_Dateischema.md`.
-- [ ] **Build 10728** — Sound-Kaskaden (B-S2, ursprünglich als 10723 in v1.7.0 geplant, in v1.7.1 als 10728 eingetaktet — F15 wird vorgezogen). `audioPlayer` als einzelne Instanzvariable in `SoundManager.swift` (Z. 208) — jeder `play`-Call überschreibt den vorherigen. Umsetzungsentscheidung hängt vom KlangweltReview ab: Player-Pool zur Erlaubnis von Kaskaden, oder bewusster Abbruch des laufenden Sounds. Etappe nach KlangweltReview einplanen.
-- [ ] **Code-Etappe Audio-Session-Robustheit (Vorbereitung WAV-Produktion)** — Umbau im `SoundManager.swift`: (a) `AVAudioSession`-Setup auf `.ambient` mit `.duckOthers`-Option umstellen; (b) Volume-Resolution mit `isOtherAudioPlaying`-Check für Quiet-Stufe (siehe `Klangwelt/MCK_Methodik.md` Sektion 5); (c) Pre-Loading der Klangwelt-WAVs mit optionalem Pre-Warming-Pass; (d) SoundActions-Konsolidierung 17→16 (entfernt: `hauptaufgabeErledigt`, `hauptaufgabeUebersprungen`, `aufgabeErstellt`, `aufgabeGeloescht`, `erledigteEntfernt`, `aufgabeZurueckgesetzt`, `exportImport`, `uiAktion`; neu: `.aktionRegistriert`, `.aktionAbgeschlossen`, `.warnungVorAktion`, `.updateVerfuegbar`, `.syncCompleted`, `.syncFailed`); (e) Variable `dayBookendSoundWorld` zu `defaultSoundWorld` umbenennen, UI-Label „Standard-Klangwelt"; (f) Fallback-Logik abbauen, da System-Welt eigene WAVs bekommt; (g) Player-Pool-Frage: bewusster Abbruch (Empfehlung Methodik), ggf. mit ~50ms Volume-Fade. Vorgesehen als Build 10728 oder eigene Sequenz vor WAV-Produktion.
-- [ ] WAV-Review Cityflow + Horizont (ca. 30 Dateien ausstehend). **Mini-Befund aus F11-Verifikation (02.05.2026):** Querbezug zur fehlenden `.erledigteEntfernt`-WAV in einer Klangwelt — siehe KlangweltReview oben.
-- [ ] ElevenLabs Prompt-Workshop für neue/erweiterte Sound Actions
-- [ ] ElevenLabs Prompt-Länge testen (Tool generiert 10–20 % kürzer als spezifiziert → Prompts etwas länger ansetzen)
+Übergabepunkt für die Klangwelt-Methodik-Umsetzung. Bei Sessionbeginn zuerst lesen — der Block zeigt, an welchem Schritt der Plan steht und welche Doku-Quellen nachzuschlagen sind.
+
+#### Pflichtlektüre vor Wiedereinstieg
+
+- **`Klangwelt/MCK_Methodik.md`** — alle Designentscheidungen (9 Sektionen, 539 Zeilen). Insbesondere Sektion 4 (Aktions-Klassifikation, 16-Aktionen-Liste mit Welt-Quellen), Sektion 6 (8-Slot-Schablone und Hybrid-Strategie), Sektion 7 (Iterations-Methodik mit Experimenten 1–7).
+- **`Klangwelt/MCK_Bewertung.xlsx`** — Inventur + 5 Welt-Sheets (Morgenwald, Salon, Cityflow, Horizont, System) mit 16 Sound-Slots pro Welt. Bewertungsskala 0–5 in Legende.
+- **`Klangwelt/MCK_Inventur.md`** Sektion 5 — Sound-Verdienst-Beschluss mit kanonischer Trigger-Stellen-Tabelle.
+- **`Klangwelt/MCK_Chartas.md`** — Welt-Identität und Kernmotiv-Vorschläge pro Welt.
+- **`Klangwelt/MCK_Manifest.md`** — Designprinzipien (Causality, Harmony, Utility, Sound-Weight) und Negativliste.
+
+#### Zentrale Beschlüsse aus Session 06.05.2026
+
+Punkte, die nicht alle explizit in der Methodik stehen, aber den Wiedereinstieg prägen:
+
+- **Welt-Reihenfolge bei der Produktion:** Salon → Morgenwald → Cityflow → Horizont → System (Begründung: Klavier-Vertrautheit kalibriert das Welt-Vokabular am leichtesten; System zuletzt wegen eigener Sound-Design-Schule)
+- **Cluster-Reihenfolge innerhalb einer Welt:** Aufgabenbezug → Tagesbezug → Rest (Begründung: kurze Aufgaben-Sounds sind der Härtetest, Tagesgesten skalieren das etablierte Vokabular nach oben, Klasse-C-Sounds sind Synthese)
+- **Sound-Strategie:** Hybrid — Kernmotiv pro Welt aus Charta als Stilanker (nicht reproduzierbare Komposition), 8-Slot-Schablone pro Aktion variiert das Motiv über Slots 3–5
+- **Funktion-Slot-Praxis:** Beispiele (z. B. *„like a quiet acknowledgment"*) werden am erzeugten Klang justiert, nicht abstrakt vor der Generierung
+- **ElevenLabs-Korrekturfaktor:** 10–20 % länger als Soll-Dauer im Prompt ansagen (Tool generiert kürzer)
+- **Bewertungs-Schwellen:** ≥3 für Bundle, ≥4 als Welt-„fertig", 5 = unverrückbar
+- **Kollaborations-Workflow:** Claude generiert Prompts, Chris generiert in ElevenLabs (3–4 Varianten pro Prompt), gemeinsame Auswertung mit Eintrag in `MCK_Bewertung.xlsx`
+
+#### Phase 1 — Testphase (Methodik kalibrieren)
+
+Ziel: Empirisch belegte Bänder für Sound-Längen, justierte Prompt-Praxis, kalibrierte ElevenLabs-Erwartung. Vor Phase 2 abgeschlossen.
+
+- [ ] **1a — Längen-Verifikation** (Experiment 1+2 aus Methodik §7) — Welt Salon, Aktion `teilaufgabeErledigt`. Drei Längen-Varianten (0.5 / 0.7 / 1.0 s) — Slots 1–6 und 8 identisch, nur Slot 7 (Dauer) variiert. Auswertung: welche Länge sitzt am rechtesten? Wie viel Stille-Padding hängt ElevenLabs typisch dran? Verschieben sich die Bänder in Methodik §3?
+- [ ] **1b — Slot-Wirksamkeit + Prompt-Detailtiefe** (Experiment 3+4) — Resolution-Slot (5) explizit vs. weich. Detailtiefe minimal vs. mittel vs. üppig. Welten Salon (`hauptaufgabeKomplett`) und Morgenwald (`tagBegonnen`).
+- [ ] **1c — Welt-Identitätsschärfe** (Experiment 5) — Identische Aktion (`teilaufgabeErledigt`) in Salon vs. Horizont. Welt-Charakter klar wahrnehmbar oder verwandt?
+- [ ] **1d — System-Welt-Erstkontakt** (Experiment 7, vorläufig) — Erste System-Welt-Sounds gegen iOS-System-IDs hören. Robustheits-Anforderung der Charta: sharp transients, mid-frequency focus, definierter Hüll-Ende. Endgültiger Test in Phase 5b nach Code-Etappe.
+
+#### Phase 2 — Produktion Klangwelt 1: Salon
+
+Ziel: Salon vollständig generiert, bewertet, kalibriert. Methodik durch erste vollständige Welt geschärft, Erkenntnisse fließen in die folgenden Welten ein.
+
+- [ ] **2a — Aufgabenbezug** — Slots 02, 03, 04, 07 (Klasse-A kategoriebezogen) plus Slots 08, 09, 10 (Klasse-B kategoriebezogen)
+- [ ] **2b — Tagesbezug** — Slots 01, 05, 06 (Klasse-A Standard-Klangwelt)
+- [ ] **2c — Rest** — Slots 11, 12, 13 (Klasse-B Standard-Klangwelt) plus Slots 14, 15, 16 (Klasse-C Synthese)
+- [ ] **2d — Evaluation Salon** — alle 16 Slots ≥4 in `MCK_Bewertung.xlsx`. Reflektion: was hat sich bewährt, was muss justiert werden bevor Welt 2 startet? Methodik-Update falls nötig.
+
+#### Phase 3 — Produktion der übrigen Welten
+
+Pro Welt analog zu Phase 2: Aufgabenbezug → Tagesbezug → Rest → Evaluation.
+
+- [ ] **3a — Morgenwald** (auditory icons; verifiziert dass die Methodik nicht nur für Earcons gilt)
+- [ ] **3b — Cityflow** (Hybrid-Welt mit dokumentierter Schwäche: Tagesabschluss-Resolution im Lo-Fi-Vokabular schwer)
+- [ ] **3c — Horizont** (synthetische Earcons; Methodik dann eingespielt)
+- [ ] **3d — System** (eigene Sound-Design-Schule, Charta-Strategie C mit Rückfall B; komplexester Fall, daher zuletzt)
+
+#### Phase 4 — Code-Änderungen (Audio-Session-Robustheit)
+
+Voraussetzung: mindestens Phase 2 abgeschlossen — erste WAVs liegen vor, Robustheits-Tests sinnvoll. Vorgesehen als Build 10728 oder eigene Sequenz; bei Etappenplanung entscheiden, ob ein einziger Build oder mehrere.
+
+- [ ] **4a — Audio-Session** — `.ambient` mit `.duckOthers`-Option umstellen (heute `.ambient` ohne Option); Volume-Resolution mit `isOtherAudioPlaying`-Check für Quiet-Stufe (siehe Methodik §5)
+- [ ] **4b — Pre-Loading** — Klangwelt-WAVs bei erster Anforderung in `AVAudioPlayer`-Instanzen cachen; optional Pre-Warming-Pass beim App-Start für aktive Welten
+- [ ] **4c — SoundActions-Konsolidierung 17→16** — entfernt: `hauptaufgabeErledigt`, `hauptaufgabeUebersprungen`, `aufgabeErstellt`, `aufgabeGeloescht`, `erledigteEntfernt`, `aufgabeZurueckgesetzt`, `exportImport`, `uiAktion`. Neu: `.aktionRegistriert`, `.aktionAbgeschlossen`, `.warnungVorAktion`, `.updateVerfuegbar`, `.syncCompleted`, `.syncFailed`. Trigger-Stellen aus Inventur §5 anwenden.
+- [ ] **4d — Variable umbenennen** — `dayBookendSoundWorld` → `defaultSoundWorld`, UI-Label „Standard-Klangwelt", Hilfetext angepasst. Plus: Bullet-Point in Doku-Pflege „Bekannte Fallstricke" (Z. 225) auf neuen Stand aktualisieren (`.ambient` mit `.duckOthers`).
+- [ ] **4e — Fallback-Logik abbauen** — System-Welt bekommt eigene WAVs, kein System-Sound-ID-Fallback mehr nötig
+- [ ] **4f — Player-Pool oder bewusster Abbruch** — Methodik-Empfehlung: bewusster Abbruch (Single-Instance bleibt). Falls Tests in Phase 5 harte Cuts als unangenehm zeigen: gefadeter Abbruch mit ~50 ms Volume-Fade
+
+#### Phase 5 — Test und Evaluation am Gerät
+
+Voraussetzung: Phase 3 (alle Welten produziert) und Phase 4 (Code mit neuer Architektur) abgeschlossen.
+
+- [ ] **5a — Robustheits-Test** (Experiment 6) — Klangwelt-Sounds parallel zu laufender Apple-Music am echten iPhone. Kommt der Sound durch? Ist das Ducking angemessen? Volume-Quiet-Eskalation auf Normal bei Hintergrundmusik wahrnehmbar?
+- [ ] **5b — System-Welt-Vergleich finaler Pass** (Experiment 7) — System-WAVs vs. iOS-System-IDs A/B am Gerät. Erfüllen unsere System-WAVs die Robustheits-Anforderung der Charta?
+- [ ] **5c — Bewertungs-Eintrag finalisieren** — alle 80 Slots in `MCK_Bewertung.xlsx` ≥4. Welten, die nicht erreicht werden, in eine Re-Generierungs-Welle planen.
+- [ ] **5d — TestFlight-Phase** — Build mit neuer Klangwelt im TestFlight, eigene Test-Phase (1–2 Wochen) mit täglichem Gebrauch der App
+- [ ] **5e — App-Store-Submission** — wenn alle Tests grün und keine F-Befunde aus dem TestFlight aufgetaucht sind
+
+#### Erledigte Klangwelt-Etappen (Historie)
+
+- [x] **WAV-Hygiene 04.05.2026** — Cityflow-Dateien mit Leerzeichen umbenannt, tote `*uiAktion.wav`-Dateien entfernt, Subordner-Casing konsistent. App-Repo Commit `59aac74`. Doku in `Klangwelt/MCK_Dateischema.md`.
+- [x] **Sound-Verdienst-Beschluss 06.05.2026** — Inventur Sektion 5 mit kanonischer Trigger-Stellen-Tabelle, sechs neuen SoundActions, Audio-Session-Konfiguration `.ambient + .duckOthers`. Doku-Repo Commit `d09e20c`.
+- [x] **Klangwelt-Methodik vollständig befüllt 06.05.2026** — `MCK_Methodik.md` aus Skeleton (243 B) zu Vollfassung (539 Zeilen, 9 Sektionen). Doku-Repo Commit `2719f79`.
+- [x] **MCK_Bewertung.xlsx restrukturiert 06.05.2026** — auf 16-Aktionen-Architektur, 7 Sheets (Inventur + 5 Welten + Legende), Dateinamen-Schema `<welt-2b>_<klang-2b><slot-2-stell>.wav`. Doku-Repo Commit `27d90db`.
 
 ### Weitere Verbesserungen
 
@@ -308,10 +376,10 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 - **v1.7.0 (Build 10726) seit 04.05.2026 im App Store live.** Builds 10713–10726 alle abgeschlossen, getaggt, gepusht. Letzter Code-Build vor Submission war 10726 (WhatsNewView).
 - **F12 + F13 am 04.05.2026 verifiziert und geschlossen** — beide nicht reproduzierbar, vermutlich implizit gefixt durch den `setStatus(_:manually:)`-Helper aus 10711 und die Subtask-Operations-Konsolidierung aus 10716/10717.
 - **Build 10724 (MusicPlayerView-Konsolidierung) ist Bestandteil von v1.7.0** — die kurzzeitige Verschiebung nach v1.7.1 in der Doku am 04.05.2026 vormittags war Irrtum, am Nachmittag korrigiert.
-- v1.7.1-Build-Sequenz: **10727 F15** (Lautstärke-Differenzierung, erledigt 04.05.2026), **10728 Sound-Kaskaden** (B-S2, hängt am KlangweltReview).
+- v1.7.1-Build-Sequenz: **10727 F15** (Lautstärke-Differenzierung, erledigt 04.05.2026), **10728 Sound-Kaskaden** (B-S2, inhaltlich aufgegangen im Klangwelt-Phasen-Plan Phase 4f).
 
-**Nächste Code-Etappe(n):**
-1. KlangweltReview vor Build 10728 — Sound-Kaskaden-Umsetzung hängt davon ab (Player-Pool zur Kaskade vs. bewusster Abbruch des laufenden Sounds).
+**Nächste Etappe(n):**
+1. **Klangwelt-Methodik-Umsetzung** — Phasen-Plan in Sektion „Klangwelt-Umsetzung". Aktuell: Phase 1 (Testphase mit Längen-Verifikation, Slot-Wirksamkeit, Welt-Identitätsschärfe, System-Welt-Erstkontakt). Code-Etappe (Phase 4) erst nach Phase 2 (Salon-Produktion).
 
 **v1.7.1-Backlog ohne feste Buildnummer:**
 - F4 (markOpen lässt Folge-Instanz bestehen) — Klärung gemeinsam mit B1, weil verwandte Frage „was passiert mit erledigten Instanzen wenn man sie reaktiviert"
@@ -323,10 +391,8 @@ Ideen und Backlog – noch nicht konkret für ein Release geplant.
 - B1 (Historie als echtes Protokoll) — größerer Konzept- und Code-Block, eigene Strategie-Session sinnvoll vor Umsetzung
 
 **Reviews & Design:**
-- TemplatePaletteReview, KlangweltReview, Hauptaufgaben-Design
+- TemplatePaletteReview, Hauptaufgaben-Design (KlangweltReview siehe eigene Sektion „Klangwelt-Umsetzung" mit Phasen-Plan)
 - App-weite Farbpalette-Konsistenz (Vermerk aus 10722 — Status-Punkt vs. Fortschrittsring)
-- WAV-Review Cityflow + Horizont (~30 Dateien), inkl. `.erledigteEntfernt`-Lücke aus F11-Verifikation
-- System-Klangwelt vollständig mit eigenen WAVs
 
 **Onboarding-Verfeinerung (v1.7.x):**
 - Default-Kategorien + Mustertemplate „MyCadenza einrichten" — siehe Konzept-Dokument `MyCadenza_FeatureKonzepte_v1_7_x.md`. Nach Abschluss der v1.7.1-Build-Sequenz.
